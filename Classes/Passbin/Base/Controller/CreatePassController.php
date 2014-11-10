@@ -8,9 +8,17 @@ namespace Passbin\Base\Controller;
 
 use TYPO3\Flow\Annotations as Flow;
 
-class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
-	/**
+    /**
+     * passRepository
+     *
+     * @var \Passbin\Base\Domain\Repository\PassRepository
+     * @Flow\Inject
+     */
+    protected $passRepository;
+
+    /**
 	 * @return void
 	 */
 	public function indexAction() {
@@ -28,4 +36,19 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
         ));
     }
 
+    /**
+     * @return void
+     */
+    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
+
+
+
+        $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
+        $newPass->setCreationDate(new \DateTime("now"));
+
+        //var_dump($newPass);die();
+
+        $this->passRepository->add($newPass);
+        $this->redirect("new");
+    }
 }
