@@ -1,0 +1,41 @@
+<f:layout name="Default" />
+
+<f:section name="Title">New Secure Note</f:section>
+
+<f:section name="Content">
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="well bs-component">
+                <f:form action="create" enctype="multipart/form-data" class="form-horizontal" name="newPass" object="{newPass}">
+                    <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="headline" class="col-lg-2 control-label">Secure Note</label>
+                            <div class="col-lg-10">
+                                <f:form.textarea property="headline" id="headline" class="form-control" placeholder="Secure Note" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-lg-2 control-label">Password (to unlock)</label>
+                            <div class="col-lg-10">
+                                <f:form.password property="password" id="password" class="form-control" placeholder="Password" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <f:form.submit class="btn btn-primary" value="Submit" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </f:form>
+            </div>
+        </div>
+    </div>
+</f:section>
