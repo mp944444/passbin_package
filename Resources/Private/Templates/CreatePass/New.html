@@ -8,24 +8,51 @@
         <div class="col-lg-6">
             <div class="well bs-component">
                 <f:form action="create" enctype="multipart/form-data" class="form-horizontal" name="newPass" object="{newPass}">
+                    <f:form.validationResults>
+                        <f:if condition="{validationResults.flattenedErrors}">
+                            <div class="alert alert-danger">
+                                <ul class="error">
+                                    <f:for each="{validationResults.flattenedErrors}" as="elementErrors"
+                                           key="elementIdentifier" reverse="true">
+                                                <f:for each="{elementErrors}" as="error">
+                                                    <li>{error}</li>
+                                                </f:for>
+                                    </f:for>
+                                </ul>
+                            </div>
+                        </f:if>
+                    </f:form.validationResults>
+
                     <fieldset>
                         <legend></legend>
                         <div class="form-group">
-                            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                            <label for="headline" class="col-lg-2 control-label">Description</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                                <f:form.textfield property="headline" id="headline" class="form-control" placeholder="This is a super secure Password" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="headline" class="col-lg-2 control-label">Secure Note</label>
+                            <label for="secure" class="col-lg-2 control-label">Secure Note</label>
                             <div class="col-lg-10">
-                                <f:form.textarea property="headline" id="headline" class="form-control" placeholder="Secure Note" />
+                                <f:form.textarea property="secure" id="secure" class="form-control" placeholder="Secure Note" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="password" class="col-lg-2 control-label">Password (to unlock)</label>
                             <div class="col-lg-10">
                                 <f:form.password property="password" id="password" class="form-control" placeholder="Password" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sendEmail" class="col-lg-2 control-label" >Send Email?</label>
+                            <div class="col-lg-10">
+                                <f:form.checkbox id="sendEmail" property="sendEmail" value="yes" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield class="form-control" id="email" property="email" placeholder="Email" errorClass="error" />
                             </div>
                         </div>
                         <div class="form-group">
