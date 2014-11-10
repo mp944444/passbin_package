@@ -1,0 +1,7 @@
+-
+  name: 'Homepage'
+  uriPattern: ''
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'Standard'
+    '@action': 'index'
