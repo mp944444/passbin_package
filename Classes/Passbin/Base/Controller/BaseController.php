@@ -9,6 +9,12 @@ namespace Passbin\Base\Controller;
 use TYPO3\Flow\Annotations as Flow;
 
 class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
-
+    /**
+     * passRepository
+     *
+     * @var \Passbin\Base\Domain\Repository\PassRepository
+     * @Flow\Inject
+     */
+    protected $passRepository;
 
 }
