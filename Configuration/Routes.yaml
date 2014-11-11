@@ -5,3 +5,11 @@
     '@package': 'Passbin.Base'
     '@controller': 'CreatePass'
     '@action': 'new'
+
+-
+  name: 'ViewPass'
+  uriPattern: 'id/{id}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'ViewPass'
+    '@action': 'index'
