@@ -12,9 +12,7 @@ namespace Passbin\Base\Validation\Validator;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
-/**
- * A validator for checking items against foos.
- */
+
 class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractValidator
 {
 
@@ -26,8 +24,6 @@ class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractVal
     );
 
     /**
-     * Check if the given value is a valid foo item. What constitutes a valid foo
-     * is determined through the 'foo' option.
      *
      * @param \Passbin\Base\Domain\Model\Pass $value
      * @throws \TYPO3\Flow\Validation\Exception\InvalidValidationOptionsException
