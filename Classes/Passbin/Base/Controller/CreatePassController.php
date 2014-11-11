@@ -11,14 +11,6 @@ use TYPO3\Flow\Annotations as Flow;
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
     /**
-     * passRepository
-     *
-     * @var \Passbin\Base\Domain\Repository\PassRepository
-     * @Flow\Inject
-     */
-    protected $passRepository;
-
-    /**
 	 * @return void
 	 */
 	public function indexAction() {
@@ -38,6 +30,16 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
     /**
      * @return void
+     * @param string $passId
+     */
+    public function generateLinkAction($passId) {
+        $link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
+        $this->view->assign("link", $link);
+
+    }
+
+    /**
+     * @return void
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
 
@@ -49,6 +51,6 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
         //var_dump($newPass);die();
 
         $this->passRepository->add($newPass);
-        $this->redirect("new");
+        $this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
     }
 }
