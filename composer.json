@@ -4,7 +4,8 @@
     "description": "Add description here",
     "require": {
         "typo3/flow": "*",
-        "typo3/twitter-bootstrap": "dev-master"
+        "typo3/twitter-bootstrap": "dev-master",
+        "typo3/swiftmailer": "dev-master"
     },
     "autoload": {
         "psr-0": {
