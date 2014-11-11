@@ -13,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @Flow\Entity
  */
 class Pass {
+
+    /**
+     * id
+     * @var string
+     */
+    protected $id;
+
     /**
      * creator
      *
@@ -176,6 +183,22 @@ class Pass {
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
 }
