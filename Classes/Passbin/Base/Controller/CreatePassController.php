@@ -40,6 +40,8 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
     /**
      * @return void
+     * @param \Passbin\Base\Domain\Model\Pass $newPass
+     * @Flow\Validate(argumentName="newPass", type="Passbin.Base:PassSendMail")
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
 
@@ -51,6 +53,14 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
         //var_dump($newPass);die();
 
         $this->passRepository->add($newPass);
+
+        if ($newPass->getSendEmail() === "yes") {
+            if ($newPass->getEmail() == "") {
+
+            }
+
+        }
+
         $this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
     }
 }
