@@ -1,0 +1,34 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Secure Note</f:section>
+
+<f:section name="Content">
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-6">
+            <div class="well bs-component">
+                <form class="form-horizontal">
+
+
+                    <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                            <label for="headline" class="col-lg-2 control-label">Description</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield property="headline" id="headline" class="form-control" value="{pass.headline}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="secure" class="col-lg-2 control-label">Secure Note</label>
+                            <div class="col-lg-10">
+                                <f:form.textarea property="secure" id="secure" class="form-control" value="{pass.secure}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</f:section>

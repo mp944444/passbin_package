@@ -1,0 +1,41 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Unlock Password (id:{passId})</f:section>
+
+<f:section name="Content">
+
+
+
+<f:if condition="{found}">
+    <f:then>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div class="well bs-component">
+                    <f:form action="decrypt" enctype="multipart/form-data" class="form-horizontal" arguments="{passId:passId, password:password}">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="password" class="col-lg-2 control-label">Password</label>
+                                <div class="col-lg-10">
+                                    <f:form.password name="password" id="password" class="form-control" placeholder="Password" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <f:form.submit class="btn btn-primary" value="Submit" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </f:form>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+    </f:then>
+    <f:else>
+        <f:then>
+        Nicht gefunden
+        </f:then>
+    </f:else>
+    </f:if>
+</f:section>
