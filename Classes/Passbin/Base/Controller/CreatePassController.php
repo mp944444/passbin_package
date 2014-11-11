@@ -41,7 +41,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
 
-
+        $newPass->setId(uniqid());
 
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
