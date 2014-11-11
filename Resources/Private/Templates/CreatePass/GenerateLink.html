@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<f:layout name="Default" />
 
-</body>
-</html>
+<f:section name="Title">Link to share</f:section>
+
+<f:section name="Content">
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <div class="well bs-component">
+            <form>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="link" class="col-lg-2 control-label">Link</label>
+                        <div class="col-lg-10">
+                            <f:form.textfield name="link" id="link" class="form-control" value="{link}" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+</f:section>
