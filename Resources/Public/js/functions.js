@@ -8,4 +8,7 @@ $(document).ready(function() {
             $('#email').val('');
         }
     });
+
+
+    $('.findErrors').find('.hasError').parent().parent().addClass('has-error');
 });
