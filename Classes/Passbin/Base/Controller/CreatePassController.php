@@ -41,7 +41,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
     /**
      * @return void
      * @param \Passbin\Base\Domain\Model\Pass $newPass
-     * @Flow\Validate(argumentName="newPass", type="Passbin.Base:PassSendMail")
+     * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
 
@@ -55,10 +55,12 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
         $this->passRepository->add($newPass);
 
         if ($newPass->getSendEmail() === "yes") {
-            if ($newPass->getEmail() == "") {
-
-            }
-
+            $mail = new \TYPO3\SwiftMailer\Message();
+            $mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
+                ->setTo(array($newPass->getEmail() => ''))
+                ->setSubject('Someone shared a secure Note with you!')
+                ->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
+                ->send();
         }
 
         $this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
