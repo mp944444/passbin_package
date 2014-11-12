@@ -30,11 +30,15 @@ class ViewPassController extends BaseController {
      * @param string $password
      */
     public function decryptAction($passId, $password) {
+        /**
+         * @var \Passbin\Base\Domain\Model\Pass $pass
+         */
         $pass = $this->passRepository->findById($passId)->getFirst();
 
         if ($pass !== NULL) {
             if ($pass->getPassword() == $password) {
-                $this->addFlashMessage("The 'Secure Note' has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
+                $this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
+                $pass->setSecure($this->decryptData($pass->getSecure()));
                 $this->view->assign('pass',$pass);
                 $this->passRepository->remove($pass);
             } else {
@@ -43,7 +47,7 @@ class ViewPassController extends BaseController {
                 $this->redirectToRequest($this->request->getReferringRequest());
             }
         } else {
-            $this->addFlashMessage("The 'Secure Note' is not there anymore.");
+            $this->addFlashMessage("The note is not there anymore.");
             $this->redirect("new", "CreatePass");
         }
     }
