@@ -41,12 +41,14 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
     /**
      * @return void
      * @param \Passbin\Base\Domain\Model\Pass $newPass
+     * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
+     * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
      * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
 
         $newPass->setId(uniqid());
-
+        $newPass->setSecure($this->encryptData($newPass->getSecure()));
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
 
