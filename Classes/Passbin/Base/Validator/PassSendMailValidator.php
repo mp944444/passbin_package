@@ -1,5 +1,5 @@
 <?php
-namespace Passbin\Base\Validation\Validator;
+namespace Passbin\Base\Validator;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow framework.                       *
@@ -13,14 +13,12 @@ namespace Passbin\Base\Validation\Validator;
 
 use TYPO3\Flow\Annotations as Flow;
 
-class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractValidator
-{
+class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractValidator {
 
     /**
      * @var array
      */
     protected $supportedOptions = array(
-        'pass' => array(NULL, 'pass', '\Passbin\Base\Domain\Model\Pass', true),
     );
 
     /**
@@ -31,23 +29,18 @@ class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractVal
      */
     protected function isValid($value)
     {
-        if (!isset($this->options['pass'])) {
-            throw new \TYPO3\Flow\Validation\Exception\InvalidValidationOptionsException(
-                'The option "pass" for this validator needs to be specified', 12346788
-            );
-        }
 
         if ($value->getSendEmail() == "yes") {
+
             $emailValidator = new \TYPO3\Flow\Validation\Validator\EmailAddressValidator();
             $emailvalid = $emailValidator->validate($value->getEmail());
-            if ($emailvalid->hasErrors()) {
-                $this->addError($emailvalid->getFirstError()->getMessage(),$emailvalid->getFirstError()->getCode(),$emailvalid->getFirstError()->getArguments());
-            }
+
             $notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
             $notemptyvalid = $notEmptyValidator->validate($value->getEmail());
             if ($notemptyvalid->hasErrors()) {
-                $this->addError($notemptyvalid->getFirstError()->getMessage(),$notemptyvalid->getFirstError()->getCode(),$notemptyvalid->getFirstError()->getArguments());
+                $this->addError($notemptyvalid->getFirstError()->getMessage(), $notemptyvalid->getFirstError()->getCode(), $notemptyvalid->getFirstError()->getArguments());
             }
+
         }
     }
 }
