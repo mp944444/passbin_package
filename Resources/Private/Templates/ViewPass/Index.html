@@ -11,12 +11,12 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
                 <div class="well bs-component">
-                    <f:form action="decrypt" enctype="multipart/form-data" class="form-horizontal" arguments="{passId:passId, password:password}">
+                    <f:form action="decrypt" enctype="multipart/form-data" class="form-horizontal findErrors" arguments="{passId:passId, password:password}">
                         <fieldset>
                             <div class="form-group">
                                 <label for="password" class="col-lg-2 control-label">Password</label>
                                 <div class="col-lg-10">
-                                    <f:form.password name="password" id="password" class="form-control" placeholder="Password" />
+                                    <f:form.password name="password" id="password" class="form-control" placeholder="Password" errorClass="hasError" />
                                 </div>
                             </div>
                             <div class="form-group">
