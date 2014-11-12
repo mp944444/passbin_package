@@ -9,8 +9,7 @@
 <f:if condition="{found}">
     <f:then>
         <div class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-lg-offset-2">
                 <div class="well bs-component">
                     <f:form action="decrypt" enctype="multipart/form-data" class="form-horizontal" arguments="{passId:passId, password:password}">
                         <fieldset>
@@ -29,7 +28,6 @@
                     </f:form>
                 </div>
             </div>
-            <div class="col-lg-2"></div>
         </div>
     </f:then>
     <f:else>

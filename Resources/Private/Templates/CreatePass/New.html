@@ -5,10 +5,9 @@
 <f:section name="Content">
 
     <div class="row">
-        <div class="col-lg-2"></div>
-        <div class="col-lg-6">
+        <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
-                <f:form action="create" enctype="multipart/form-data" class="form-horizontal" name="newPass" object="{newPass}">
+                <f:form action="create" enctype="multipart/form-data" class="form-horizontal findErrors" name="newPass" object="{newPass}">
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
                             <div class="alert alert-danger">
@@ -29,31 +28,31 @@
                         <div class="form-group">
                             <label for="headline" class="col-lg-2 control-label">Description</label>
                             <div class="col-lg-10">
-                                <f:form.textfield property="headline" id="headline" class="form-control" placeholder="This is a super secure Password" />
+                                <f:form.textfield property="headline" id="headline" class="form-control" placeholder="This is a super secure Password" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="secure" class="col-lg-2 control-label">Secure Note</label>
                             <div class="col-lg-10">
-                                <f:form.textarea property="secure" id="secure" class="form-control" placeholder="Secure Note" />
+                                <f:form.textarea property="secure" id="secure" class="form-control" placeholder="Secure Note" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="password" class="col-lg-2 control-label">Password (to unlock)</label>
                             <div class="col-lg-10">
-                                <f:form.password property="password" id="password" class="form-control" placeholder="Password" />
+                                <f:form.password property="password" id="password" class="form-control" placeholder="Password" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sendEmail" class="col-lg-2 control-label" >Send Email?</label>
+                            <label for="sendEmail" class="col-lg-2 control-label">Send Email? (with Link and Password)</label>
                             <div class="col-lg-10">
-                                <f:form.checkbox id="sendEmail" property="sendEmail" value="yes" />
+                                <f:form.checkbox id="sendEmail" property="sendEmail" value="yes" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group" style="display: none">
                             <label for="email" class="col-lg-2 control-label">Email</label>
                             <div class="col-lg-10">
-                                <f:form.textfield class="form-control" id="email" property="email" placeholder="Email" errorClass="error" />
+                                <f:form.textfield class="form-control" id="email" property="email" placeholder="Email" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -65,6 +64,5 @@
                 </f:form>
             </div>
         </div>
-        <div class="col-lg-2"></div>
     </div>
 </f:section>
