@@ -8,6 +8,7 @@
         <script src="{f:uri.resource(path: 'js/functions.js')}" type="text/javascript"></script>
         <bootstrap:include version="3"/>
         <link rel="stylesheet" href="{f:uri.resource(path: 'css/bootstrap.theme.css')}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{f:uri.resource(path: 'css/style.css')}" type="text/css" media="all" />
 		<f:base />
 	</head>
 	<body>
@@ -44,6 +45,29 @@
             </div>
         </div>
 		<f:render section="Content" />
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-unstyled">
+                        <li class="pull-right">
+                            <a href="#top">Back to top</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/obi12341/passbin_package">Github</a>
+                        </li>
+                        <li>
+                            <a href="#">Docker</a>
+                        </li>
+                        <li>
+                            <a href="#">Packagist</a>
+                        </li>
+                    </ul>
+                    <p>Made by <a href="https://github.com/obi12341">Patrick Oberdorf</a></p>
+                    <p>Design by <a href="http://bootswatch.com/">Bootswatch Superhero</a>. Framework by <a href="http://flow.typo3.org/">Typo3 Flow</a>.</p>
+                </div>
+            </div>
+        </footer>
     </div>
+
 	</body>
 </html>
