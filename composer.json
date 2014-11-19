@@ -4,6 +4,7 @@
     "description": "Add description here",
     "require": {
         "typo3/flow": "*",
+        "doctrine/migrations": "@dev",
         "typo3/twitter-bootstrap": "dev-master",
         "typo3/swiftmailer": "dev-master"
     },
