@@ -3,8 +3,8 @@
   uriPattern: ''
   defaults:
     '@package': 'Passbin.Base'
-    '@controller': 'CreatePass'
-    '@action': 'new'
+    '@controller': 'User'
+    '@action': 'start'
 
 -
   name: 'ViewPass'

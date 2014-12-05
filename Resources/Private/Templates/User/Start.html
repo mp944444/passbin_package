@@ -1,0 +1,51 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Login</f:section>
+
+<f:section name="Content">
+
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="well bs-component">
+                <f:form action="login" enctype="multipart/form-data" class="form-horizontal findErrors" name="login" object="{login}">
+                    <f:form.validationResults>
+                        <f:if condition="{validationResults.flattenedErrors}">
+                            <div class="alert alert-danger">
+                                <ul class="error">
+                                    <f:for each="{validationResults.flattenedErrors}" as="elementErrors"
+                                           key="elementIdentifier" reverse="true">
+                                        <f:for each="{elementErrors}" as="error">
+                                            <li>{error}</li>
+                                        </f:for>
+                                    </f:for>
+                                </ul>
+                            </div>
+                        </f:if>
+                    </f:form.validationResults>
+
+                    <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                            <label for="headline" class="col-lg-2 control-label">Username</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield property="headline" id="headline" class="form-control" placeholder="Your username" errorClass="hasError" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="secure" class="col-lg-2 control-label">Password</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield property="secure" id="secure" class="form-control" placeholder="Your password" errorClass="hasError" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <f:form.submit class="btn btn-primary" value="Login" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </f:form>
+
+            </div>
+        </div>
+    </div>
+</f:section>
