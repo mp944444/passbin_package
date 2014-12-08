@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
-                <f:form action="login" enctype="multipart/form-data" class="form-horizontal findErrors" name="login" object="{login}">
+                <f:form action="authenticate" enctype="multipart/form-data" class="form-horizontal findErrors" name="login" object="{login}">
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
                             <div class="alert alert-danger">

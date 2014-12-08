@@ -17,6 +17,20 @@ class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      */
     protected $passRepository;
 
+	/**
+	 * @FLow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+/*
+	public function initializeAction() {
+		if(!$this->authenticationManager->isAuthenticated()) {
+			$this->addFlashMessage("Please log in first!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("start", "User");
+		}
+	}
+*/
     /**
      * getEncKey
      *

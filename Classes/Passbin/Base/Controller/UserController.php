@@ -30,17 +30,40 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $userRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+
+	/**
 	 * @return void
 	 */
 	public function startAction() {
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("new", "CreatePass");
+		}
 	}
 
 	/**
-	 * @param $login
+	 * @throws \Exception
 	 */
-	public function loginAction($login) {
+	public function authenticateAction() {
+		$check = false;
+		try{
+			$this->authenticationManager->authenticate();
+			if ($this->authenticationManager->isAuthenticated()) {
+				$check = true;
+			}
+		} catch (\Exception $e){
+			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+		}
 
-		die();
+		if($check === true) {
+			$this->redirect("new", "CreatePass");
+		} else {
+			$this->redirect("start", "User");
+		}
 	}
 
 	/**
