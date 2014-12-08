@@ -20,7 +20,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param $login
 	 */
 	public function loginAction($login) {
-\TYPO3\Flow\var_dump($login);
 
 		die();
 	}
