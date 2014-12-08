@@ -44,10 +44,15 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
+	 * @param string $firstname
+	 * @param string $lastname
 	 * @return void
 	 */
-	public function registerAction() {
-
+	public function registerAction($firstname = "", $lastname = "") {
+		$this->view->assignMultiple(array(
+			"firstname" => $firstname,
+			"lastname" => $lastname
+		));
 	}
 
 	/**
@@ -60,7 +65,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-			$this->redirect("start", "User");
+			$this->redirect("register", "User", NULL, $settings = array(
+				"firstname" => $firstname,
+				"lastname" => $lastname
+			));
 		} else {
 
 			$user = new User();
