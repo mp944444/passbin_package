@@ -24,4 +24,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		die();
 	}
 
+	/**
+	 * @return void
+	 */
+	public function registerAction() {
+
+	}
+
 }
