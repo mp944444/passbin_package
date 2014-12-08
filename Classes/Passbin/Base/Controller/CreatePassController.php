@@ -42,9 +42,25 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
      * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
      * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
+	 * @param string $callable
+	 * @param string $expiration
      */
-    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
+    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $callable, $expiration) {
+		$callableOptions = array(1,2,3,4,5);
 
+		if($expiration == "") {
+			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));die();
+		} else {
+			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
+
+			if($expiration <= date('Y-m-d H:i:s')) {
+				$this->addFlashMessage("Expiration Date is invalid", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->redirect("new", "CreatePass");
+			}
+		}
+
+		$newPass->setExpiration(new \DateTime($expiration));
+		$newPass->setCallable($callableOptions[$callable]);
         $newPass->setId(uniqid());
         $newPass->setSecure($this->encryptData($newPass->getSecure()));
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
