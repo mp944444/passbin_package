@@ -35,7 +35,6 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
     public function generateLinkAction($passId) {
         $link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
         $this->view->assign("link", $link);
-
     }
 
     /**
