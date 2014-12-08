@@ -23,9 +23,8 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @return void
      */
     public function newAction() {
-        $this->view->assign('foos', array(
-            'bar', 'baz'
-        ));
+        $callableOptions = array(1,2,3,4,5);
+		$this->view->assign("callableOptions", $callableOptions);
     }
 
     /**

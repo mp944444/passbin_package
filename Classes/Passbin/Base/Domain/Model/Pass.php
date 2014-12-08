@@ -72,6 +72,16 @@ class Pass {
      */
     protected $creationDate;
 
+	/**
+	 * @var \DateTime
+	 */
+	protected $expiration;
+
+	/**
+	 * @var int
+	 */
+	protected $callable;
+
     /**
      * @return string
      */
@@ -201,4 +211,35 @@ class Pass {
         $this->id = $id;
     }
 
+	/**
+	 * @return \DateTime
+	 */
+	public function getExpiration()
+	{
+		return $this->expiration;
+	}
+
+	/**
+	 * @param \DateTime $expiration
+	 */
+	public function setExpiration($expiration)
+	{
+		$this->expiration = $expiration;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCallable()
+	{
+		return $this->callable;
+	}
+
+	/**
+	 * @param int $callable
+	 */
+	public function setCallable($callable)
+	{
+		$this->callable = $callable;
+	}
 }
