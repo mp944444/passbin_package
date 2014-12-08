@@ -46,6 +46,15 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function logoutAction() {
+		$this->authenticationManager->logout();
+		$this->addFlashMessage("You've been logout", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+		$this->redirect("start", "User");
+	}
+
+	/**
 	 * @throws \Exception
 	 */
 	public function authenticateAction() {
@@ -60,6 +69,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 
 		if($check === true) {
+			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("new", "CreatePass");
 		} else {
 			$this->redirect("start", "User");
