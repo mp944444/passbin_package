@@ -21,7 +21,7 @@ class ViewPassController extends BaseController {
 		$pass = $this->passRepository->findById($id)->getFirst();
         if ($pass !== NULL) {
 			$expiration = $pass->getExpiration();
-			
+
 			if(date('Y-m-d H:i:s') > $expiration->format("Y-m-d H:i:s")) {
 				$this->passRepository->remove($pass);
 				$this->persistenceManager->persistAll();
@@ -48,10 +48,16 @@ class ViewPassController extends BaseController {
 
         if ($pass !== NULL) {
             if ($pass->getPassword() == $password) {
-                $this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
-                $pass->setSecure($this->decryptData($pass->getSecure()));
+				if($pass->getCallable() == 1) {
+					$this->passRepository->remove($pass);
+					$this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
+				} else {
+					$pass->setCallable($pass->getCallable()-1);
+					$this->passRepository->update($pass);
+				}
+				$encrypted = $this->decryptData($pass->getSecure());
+				$this->view->assign('encrypted', $encrypted);
                 $this->view->assign('pass',$pass);
-                //$this->passRepository->remove($pass);
             } else {
 
                 $this->addFlashMessage('Wrong Password', 'password', \TYPO3\Flow\Error\Message::SEVERITY_ERROR);

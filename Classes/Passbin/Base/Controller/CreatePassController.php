@@ -49,7 +49,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 		$callableOptions = array(1,2,3,4,5);
 
 		if($expiration == "") {
-			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));die();
+			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
 		} else {
 			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
 
