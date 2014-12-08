@@ -15,8 +15,19 @@ class ViewPassController extends BaseController {
      * @param string $id
 	 */
 	public function indexAction($id) {
+		/**
+		 * @var \Passbin\Base\Domain\Model\Pass $pass
+		 */
 		$pass = $this->passRepository->findById($id)->getFirst();
         if ($pass !== NULL) {
+			$expiration = $pass->getExpiration();
+			
+			if(date('Y-m-d H:i:s') > $expiration->format("Y-m-d H:i:s")) {
+				$this->passRepository->remove($pass);
+				$this->persistenceManager->persistAll();
+				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->redirect("new", "CreatePass");
+			}
             $this->view->assign('passId', $pass->getId());
             $this->view->assign('found', true);
         } else {
@@ -40,7 +51,7 @@ class ViewPassController extends BaseController {
                 $this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
                 $pass->setSecure($this->decryptData($pass->getSecure()));
                 $this->view->assign('pass',$pass);
-                $this->passRepository->remove($pass);
+                //$this->passRepository->remove($pass);
             } else {
 
                 $this->addFlashMessage('Wrong Password', 'password', \TYPO3\Flow\Error\Message::SEVERITY_ERROR);

@@ -66,8 +66,6 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
 
-        //var_dump($newPass);die();
-
         $this->passRepository->add($newPass);
 
         if ($newPass->getSendEmail() === "yes") {
