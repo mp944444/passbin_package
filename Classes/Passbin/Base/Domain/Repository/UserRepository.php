@@ -14,6 +14,4 @@ use TYPO3\Flow\Persistence\Repository;
  */
 class UserRepository extends Repository {
 
-	// add customized methods here
-
 }

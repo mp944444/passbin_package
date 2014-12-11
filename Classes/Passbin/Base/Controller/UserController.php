@@ -7,6 +7,7 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 
 use Passbin\Base\Domain\Model\User;
+use Passbin\Base\Domain\Model\Pass;
 use TYPO3\Flow\Annotations as Flow;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
@@ -24,10 +25,16 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $accountRepository;
 
 	/**
-	 * @var \Passbin\Base\Domain\Repository\UserRepository
+ * @var \Passbin\Base\Domain\Repository\UserRepository
+ * @Flow\Inject
+ */
+	protected $userRepository;
+
+	/**
+	 * @var \Passbin\Base\Domain\Repository\PassRepository
 	 * @Flow\Inject
 	 */
-	protected $userRepository;
+	protected $passRepository;
 
 	/**
 	 * @Flow\Inject
@@ -56,8 +63,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @throws \Exception
+	 * @param string $username
 	 */
-	public function authenticateAction() {
+	public function authenticateAction($username = "") {
 		$check = false;
 		try{
 			$this->authenticationManager->authenticate();
@@ -67,10 +75,24 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		} catch (\Exception $e){
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
-
 		if($check === true) {
+
+			/** @var User $user */
+			$accout = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName("marcel", "DefaultProvider");
+			$user = $this->userRepository->findOneByAccount($accout);
+
+			$entrys = $user->getPassEntrys();
+
+		//	foreach($entrys as $entry) {
+		//		/**
+		//		 * @var Pass $entry
+		//		 */
+		//	}
+
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("new", "CreatePass");
+			$this->redirect("new", "CreatePass", NULL, array(
+				"Pass" => $entrys
+			));
 		} else {
 			$this->redirect("start", "User");
 		}
