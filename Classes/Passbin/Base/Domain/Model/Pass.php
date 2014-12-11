@@ -20,6 +20,12 @@ class Pass {
      */
     protected $id;
 
+	/**
+	 * @var \Passbin\Base\Domain\Model\User
+	 * @ORM\ManyToOne(inversedBy="user")
+	 */
+	protected $user;
+
     /**
      * creator
      *
@@ -241,5 +247,21 @@ class Pass {
 	public function setCallable($callable)
 	{
 		$this->callable = $callable;
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	/**
+	 * @param User $user
+	 */
+	public function setUser($user)
+	{
+		$this->user = $user;
 	}
 }

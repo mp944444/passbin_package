@@ -12,3 +12,7 @@ footer p {
     clear: left;
     margin-bottom: 0;
 }
+
+#usernamereader{
+    display: none;
+}

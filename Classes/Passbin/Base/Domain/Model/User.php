@@ -20,6 +20,12 @@ class User {
 	protected $account;
 
 	/**
+	 * @var \Doctrine\Common\Collections\ArrayCollection<Passbin\Base\Domain\Model\Pass>
+	 * @ORM\OneToMany(mappedBy="user", cascade="persist")
+	 */
+	protected $passEntrys;
+
+	/**
 	 * @var string
 	 */
 	protected $firstname;
@@ -75,5 +81,31 @@ class User {
 	public function setLastname($lastname)
 	{
 		$this->lastname = $lastname;
+	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getPassEntrys()
+	{
+		return $this->passEntrys;
+	}
+
+	/**
+	 * @param \Doctrine\Common\Collections\ArrayCollection $passEntrys
+	 */
+	public function setPassEntrys($passEntrys)
+	{
+		$this->passEntrys = $passEntrys;
+	}
+
+	/**
+	 * @param Pass $pass
+	 */
+	public function addPassEntry(Pass $pass) {
+		if(!$this->passEntrys->contains($pass)) {
+			$this->passEntrys->add($pass);
+			$pass->setUser($this);
+		}
 	}
 }

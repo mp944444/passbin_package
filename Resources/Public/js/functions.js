@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    $('input#usernameinput').change(function(){
+        $("#usernamereader").val($(this).val());
+    });
 
     $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
 
@@ -10,7 +13,6 @@ $(document).ready(function() {
             $('#email').val('');
         }
     });
-
 
     $('.findErrors').find('.hasError').parent().parent().addClass('has-error');
 });
