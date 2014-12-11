@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
+
     $('#sendEmail').change(function() {
         if($(this).is(":checked")) {
             $('#email').parent().parent().slideDown();

@@ -3,9 +3,8 @@
 <f:section name="Title">New Secure Note</f:section>
 
 <f:section name="Content">
-
+    <f:link.action id="logout" action="logout" controller="User" class="btn btn-primary">Logout</f:link.action>
     <div class="row">
-        <f:link.action id="back" action="logout" controller="User" class="btn btn-primary">Logout</f:link.action>
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
                 <f:form action="create" class="form-horizontal findErrors" name="newPass" object="{newPass}">
