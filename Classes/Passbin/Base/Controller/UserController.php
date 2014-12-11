@@ -91,6 +91,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					"creationdate" => $entry->getCreationDate()->format('d.m.Y H:i:s'),
 					"expiration" => $entry->getExpiration()->format('d.m.Y H:i:s'),
 					"callable" => $entry->getCallable(),
+					"id" => $entry->getId()
 				);
 			}
 

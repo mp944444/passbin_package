@@ -16,6 +16,7 @@
                     <div><b>Creation Date</b></div>
                     <div><b>Expiration</b></div>
                     <div><b>Callable</b></div>
+                    <div><b>Link</b></div>
                 </div>
                 <f:if condition="{entrys}">
                     <f:then>
@@ -25,6 +26,7 @@
                                 <div>{entry.creationdate}</div>
                                 <div>{entry.expiration}</div>
                                 <div>{entry.callable} times</div>
+                                <div><a href="http://passbin.vm/id/{entry.id}" target="_blank">{entry.id}</a></div>
                             </div>
                         </f:for>
                     </f:then>
