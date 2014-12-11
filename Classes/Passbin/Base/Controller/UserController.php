@@ -76,23 +76,26 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
-
 			/** @var User $user */
-			$accout = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName("marcel", "DefaultProvider");
-			$user = $this->userRepository->findOneByAccount($accout);
+			$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider");
+			$user = $this->userRepository->findOneByAccount($account);
 
-			$entrys = $user->getPassEntrys();
+			$entrys = array();
 
-		//	foreach($entrys as $entry) {
-		//		/**
-		//		 * @var Pass $entry
-		//		 */
-		//	}
+			foreach($user->getPassEntrys() as $entry) {
+				/**
+				 * @var Pass $entry
+				 */
+				$entrys[] = array(
+					"headline" => $entry->getHeadline(),
+					"creationdate" => $entry->getCreationDate()->format('d.m.Y H:i:s'),
+					"expiration" => $entry->getExpiration()->format('d.m.Y H:i:s'),
+					"callable" => $entry->getCallable(),
+				);
+			}
 
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("new", "CreatePass", NULL, array(
-				"Pass" => $entrys
-			));
+			$this->redirect("new", "CreatePass", NULL, array("entrys" => $entrys));
 		} else {
 			$this->redirect("start", "User");
 		}

@@ -16,3 +16,9 @@ footer p {
 #usernamereader{
     display: none;
 }
+
+.noterow div {
+    position: relative;
+    width: 175px;
+    display: inline-table;
+}

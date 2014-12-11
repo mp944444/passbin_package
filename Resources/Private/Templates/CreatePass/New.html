@@ -7,6 +7,33 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
+                <div class="noterow">
+                    <div><b>Headline</b></div>
+                    <div><b>Creation Date</b></div>
+                    <div><b>Expiration</b></div>
+                    <div><b>Callable</b></div>
+                </div>
+                <f:if condition="{entrys}">
+                    <f:then>
+                        <f:for each="{entrys}" as="entry">
+                            <div class="noterow">
+                                <div>{entry.headline}</div>
+                                <div>{entry.creationdate}</div>
+                                <div>{entry.expiration}</div>
+                                <div>{entry.callable} times</div>
+                            </div>
+                        </f:for>
+                    </f:then>
+                    <f:else>
+
+                    </f:else>
+                </f:if>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="well bs-component">
                 <f:form action="create" class="form-horizontal findErrors" name="newPass" object="{newPass}">
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
@@ -69,7 +96,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
-                                <f:form.submit class="btn btn-primary" value="Submit" />
+                                <f:form.submit class="btn btn-primary" value="Create" />
                             </div>
                         </div>
                     </fieldset>

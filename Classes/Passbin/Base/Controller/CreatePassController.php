@@ -6,6 +6,7 @@ namespace Passbin\Base\Controller;
  *                                                                        *
  *                                                                        */
 
+use Passbin\Base\Domain\Model\Pass;
 use TYPO3\Flow\Annotations as Flow;
 
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
@@ -20,9 +21,11 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	}
 
     /**
+	 * @param array $entrys
      * @return void
      */
-    public function newAction() {
+    public function newAction($entrys) {
+		$this->view->assign("entrys", $entrys);
         $callableOptions = array(1,2,3,4,5);
 		$this->view->assign("callableOptions", $callableOptions);
     }
@@ -46,6 +49,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	 * @param string $expiration
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $callable, $expiration) {
+
 		$callableOptions = array(1,2,3,4,5);
 
 		if($expiration == "") {
@@ -65,7 +69,6 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
         $newPass->setSecure($this->encryptData($newPass->getSecure()));
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
-
         $this->passRepository->add($newPass);
 
         if ($newPass->getSendEmail() === "yes") {
