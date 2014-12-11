@@ -1,9 +1,13 @@
 <f:layout name="Default" />
 
-<f:section name="Title">New Secure Note</f:section>
+<f:section name="Title">Secure Note</f:section>
 
 <f:section name="Content">
     <f:link.action id="logout" action="logout" controller="User" class="btn btn-primary">Logout</f:link.action>
+    <div class="col-lg-8 col-lg-offset-2">
+        Your Notes
+        <legend></legend>
+    </div>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
@@ -25,11 +29,15 @@
                         </f:for>
                     </f:then>
                     <f:else>
-
+                    <i>No active secure notes</i>
                     </f:else>
                 </f:if>
             </div>
         </div>
+    </div>
+    <div class="col-lg-8 col-lg-offset-2">
+        Create a new Note
+        <legend></legend>
     </div>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
