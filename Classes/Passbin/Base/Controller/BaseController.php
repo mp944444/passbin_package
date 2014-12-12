@@ -9,6 +9,7 @@ namespace Passbin\Base\Controller;
 use TYPO3\Flow\Annotations as Flow;
 
 class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+
     /**
      * passRepository
      *
@@ -23,14 +24,14 @@ class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	protected $authenticationManager;
 
-/*
+
 	public function initializeAction() {
 		if(!$this->authenticationManager->isAuthenticated()) {
 			$this->addFlashMessage("Please log in first!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("start", "User");
 		}
 	}
-*/
+
     /**
      * getEncKey
      *
