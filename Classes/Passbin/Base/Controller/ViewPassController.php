@@ -17,6 +17,12 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $passRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+	/**
 	* @return void
 	* @param string $id
 	*/
@@ -35,6 +41,11 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
+			$login = 0;
+			if($this->authenticationManager->isAuthenticated()) {
+				$login = 1;
+			}
+			$this->view->assign("login", $login);
 			$this->view->assign('passId', $pass->getId());
 			$this->view->assign('found', true);
 		} else {
@@ -65,6 +76,11 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					$this->passRepository->update($pass);
 				}
 				$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure()); //->decryptData($pass->getSecure());
+				$login = 0;
+				if($this->authenticationManager->isAuthenticated()) {
+					$login = 1;
+				}
+				$this->view->assign("login", $login);
 				$this->view->assign('encrypted', $encrypted);
                 $this->view->assign('pass',$pass);
             } else {

@@ -23,6 +23,12 @@ footer p {
     display: inline-table;
 }
 
+.expirednoterow div {
+    position: relative;
+    width: 175px;
+    display: inline-table;
+}
+
 #callable, input{
     color: #d0d0d0;
 }

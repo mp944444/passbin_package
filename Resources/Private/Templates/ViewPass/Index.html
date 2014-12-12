@@ -1,7 +1,11 @@
 <f:layout name="Default" />
 <f:section name="Title">Unlock Password (id:{passId})</f:section>
 <f:section name="Content">
-<f:if condition="{found}">
+    <f:if condition="{login} == 0">
+         <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
+    </f:if>
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+    <f:if condition="{found}">
     <f:then>
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
@@ -22,7 +26,7 @@
                         </fieldset>
                     </f:form>
                 </div>
-                <f:link.action action="new" controller="createPass" class="btn btn-primary">back</f:link.action>
+                <f:link.action action="new" controller="createPass" class="btn btn-primary">Back</f:link.action>
             </div>
         </div>
     </f:then>
