@@ -53,38 +53,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function logoutAction() {
-		$this->authenticationManager->logout();
-		$this->addFlashMessage("You've been logout", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-		$this->redirect("start", "User");
-	}
-
-	/**
-	 * @throws \Exception
-	 */
-	public function authenticateAction() {
-		$check = false;
-		try{
-			$this->authenticationManager->authenticate();
-			if ($this->authenticationManager->isAuthenticated()) {
-				$check = true;
-			}
-		} catch (\Exception $e){
-			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
-		}
-		if($check === true) {
-			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("new", "CreatePass");
-		} else {
-			$this->redirect("start", "User");
-		}
-
-		// @todo Login, logout und authenticate in LoginController auslagern
-	}
-
-	/**
 	 * @param string $firstname
 	 * @param string $lastname
 	 * @return void
@@ -104,7 +72,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password) {
 
-		// todo testen ob -> count() geht
 		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(

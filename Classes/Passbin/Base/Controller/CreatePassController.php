@@ -42,6 +42,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
 		foreach($user->getPassEntrys() as $entry) {
 			/** @var User $entry */
+			// @todo überprüfen ob das expiration datum kleiner als das aktuelle ist -> falls ja löschen
 			$entrys[] = $entry;
 		}
 
@@ -87,7 +88,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 			}
 		}
 
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($this->userStorage->getUser(), "DefaultProvider");
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$newPass->setUser($this->userRepository->findOneByAccount($account));
 		$newPass->setExpiration(new \DateTime($expiration));
 		$newPass->setCallable($callableOptions[$callable]);
