@@ -67,7 +67,9 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$pass = $this->passRepository->findById($passId)->getFirst();
 		if ($pass !== NULL) {
 			if ($pass->getPassword() == $password) {
+				$encrypted = "";
 				if($pass->getCallable() == 1) {
+					$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure()); //->decryptData($pass->getSecure());
 					$pass->setPassword("");
 					$pass->setSecure("");
 					$pass->setCallable(0);
@@ -77,7 +79,6 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					$pass->setCallable($pass->getCallable()-1);
 					$this->passRepository->update($pass);
 				}
-				$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure()); //->decryptData($pass->getSecure());
 				$login = 0;
 				if($this->authenticationManager->isAuthenticated()) {
 					$login = 1;
