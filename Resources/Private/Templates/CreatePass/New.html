@@ -3,8 +3,15 @@
 <f:section name="Title">Create a new Note</f:section>
 
 <f:section name="Content">
-    <f:link.action id="yournotes" action="notes" controller="createPass" class="btn btn-primary">Your Notes</f:link.action>
-    <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
+    <f:if condition="{login} == 1">
+        <f:then>
+            <f:link.action id="yournotes" action="notes" controller="createPass" class="btn btn-primary">Your Notes</f:link.action>
+            <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
+        </f:then>
+        <f:else>
+            <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
+        </f:else>
+    </f:if>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">

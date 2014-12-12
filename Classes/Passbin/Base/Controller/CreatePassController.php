@@ -49,7 +49,13 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @return void
      */
     public function newAction() {
+		if($this->authenticationManager->isAuthenticated()) {
+			$loginStatus = 1;
+		} else {
+			$loginStatus = 0;
+		}
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
+		$this->view->assign("login", $loginStatus);
 		$this->view->assign("callableOptions", $callableOptions);
     }
 
@@ -57,6 +63,10 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	 * @return void
 	 */
 	public function notesAction() {
+		if(!$this->authenticationManager->isAuthenticated()) {
+			$this->addFlashMessage("Please login to view your notes !", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("new", "CreatePass");
+		}
 		/** @var User $user */
 		$entrys = array();
 
