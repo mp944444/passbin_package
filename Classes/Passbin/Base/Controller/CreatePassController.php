@@ -11,7 +11,7 @@ use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Configuration\ConfigurationManager;
 
-class CreatePassController extends \Passbin\Base\Controller\BaseController {
+class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @var \TYPO3\Flow\Security\AccountRepository

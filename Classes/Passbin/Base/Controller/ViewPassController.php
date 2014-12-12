@@ -8,7 +8,7 @@ namespace Passbin\Base\Controller;
 
 use TYPO3\Flow\Annotations as Flow;
 
-class ViewPassController extends BaseController {
+class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * passRepository
@@ -35,7 +35,6 @@ class ViewPassController extends BaseController {
 				$pass->setSecure("");
 				$pass->setPassword("");
 				$this->passRepository->update($pass);
-				//$this->passRepository->remove($pass);
 				$this->persistenceManager->persistAll();
 				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
