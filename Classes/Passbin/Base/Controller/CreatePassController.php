@@ -9,6 +9,7 @@ namespace Passbin\Base\Controller;
 use Passbin\Base\Domain\Model\Pass;
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Configuration\ConfigurationManager;
 
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
@@ -38,6 +39,12 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	 */
 	protected $passRepository;
 
+	/**
+	 * @var ConfigurationManager
+	 * @Flow\Inject
+	 */
+	protected $configurationManager;
+
     /**
      * @return void
      */
@@ -59,7 +66,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 			}
 		}
 
-		$callableOptions = array(1,2,3,4,5);
+		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
 		$this->view->assignMultiple(array(
 			"entrys" => $entrys,
@@ -87,8 +94,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $callable, $expiration) {
 
-		// @ todo auslagern der Optionen in Settings.yaml
-		$callableOptions = array(1,2,3,4,5);
+		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
 		if($expiration == "") {
 			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));

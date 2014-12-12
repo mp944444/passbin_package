@@ -9,8 +9,6 @@ use TYPO3\Flow\Annotations as Flow;
 class CryptionService {
 	/**
 	 *
-
-	 * @todo functionen als static machen
 	 * getEncKey
 	 *
 	 * @return string

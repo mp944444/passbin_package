@@ -11,6 +11,15 @@ use TYPO3\Flow\Annotations as Flow;
 class ViewPassController extends BaseController {
 
 	/**
+	 * passRepository
+	 *
+	 * @var \Passbin\Base\Domain\Repository\PassRepository
+	 * @Flow\Inject
+	 */
+	protected $passRepository;
+
+
+	/**
 	 * @return void
      * @param string $id
 	 */
