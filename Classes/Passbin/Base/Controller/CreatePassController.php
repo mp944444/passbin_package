@@ -6,27 +6,85 @@ namespace Passbin\Base\Controller;
  *                                                                        *
  *                                                                        */
 
+use Passbin\Base\Domain\Model\Pass;
+use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Configuration\ConfigurationManager;
 
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
-    /**
-	 * @return void
+	/**
+	 * @var \TYPO3\Flow\Security\AccountRepository
+	 * @Flow\Inject
 	 */
-	public function indexAction() {
-		$this->view->assign('foos', array(
-			'bar', 'baz'
-		));
-	}
+	protected $accountRepository;
+
+	/**
+	 * @var \Passbin\Base\Domain\Repository\UserRepository
+	 * @Flow\Inject
+	 */
+	protected $userRepository;
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+	/**
+	 * passRepository
+	 *
+	 * @var \Passbin\Base\Domain\Repository\PassRepository
+	 * @Flow\Inject
+	 */
+	protected $passRepository;
+
+	/**
+	 * @var ConfigurationManager
+	 * @Flow\Inject
+	 */
+	protected $configurationManager;
 
     /**
      * @return void
      */
     public function newAction() {
-        $this->view->assign('foos', array(
-            'bar', 'baz'
-        ));
+		if($this->authenticationManager->isAuthenticated()) {
+			$loginStatus = 1;
+		} else {
+			$loginStatus = 0;
+		}
+		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
+		$this->view->assign("login", $loginStatus);
+		$this->view->assign("callableOptions", $callableOptions);
     }
+
+	/**
+	 * @return void
+	 */
+	public function notesAction() {
+		if(!$this->authenticationManager->isAuthenticated()) {
+			$this->addFlashMessage("Please login to view your notes !", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("new", "CreatePass");
+		}
+		/** @var User $user */
+		$entrys = array();
+
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $this->userRepository->findOneByAccount($account);
+
+		foreach($user->getPassEntrys() as $entry) {
+			/** @var Pass $entry */
+			if($entry->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s"))
+			{
+				$this->passRepository->remove($entry);
+				$this->persistenceManager->persistAll();
+			} else {
+				$entrys[] = $entry;
+			}
+		}
+		$this->view->assign("entrys", $entrys);
+	}
 
     /**
      * @return void
@@ -35,7 +93,6 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
     public function generateLinkAction($passId) {
         $link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
         $this->view->assign("link", $link);
-
     }
 
     /**
@@ -44,16 +101,36 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
      * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
      * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
+     * @param string $expiration
+     * @param string $callable
      */
-    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass) {
+    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
 
+		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
+
+		if($expiration == "") {
+			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
+		} else {
+			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
+
+			if($expiration <= date('Y-m-d H:i:s')) {
+				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->redirect("new", "CreatePass");
+			}
+		}
+
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$newPass->setUser($this->userRepository->findOneByAccount($account));
+		$newPass->setExpiration(new \DateTime($expiration));
+		if($callable == NULL) {
+			$newPass->setCallable($callableOptions[0]);
+		} else {
+			$newPass->setCallable($callableOptions[$callable]);
+		}
         $newPass->setId(uniqid());
-        $newPass->setSecure($this->encryptData($newPass->getSecure()));
+		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
-
-        //var_dump($newPass);die();
-
         $this->passRepository->add($newPass);
 
         if ($newPass->getSendEmail() === "yes") {

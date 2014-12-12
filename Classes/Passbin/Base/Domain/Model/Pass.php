@@ -20,6 +20,12 @@ class Pass {
      */
     protected $id;
 
+	/**
+	 * @var \Passbin\Base\Domain\Model\User
+	 * @ORM\ManyToOne(inversedBy="user")
+	 */
+	protected $user;
+
     /**
      * creator
      *
@@ -71,6 +77,16 @@ class Pass {
      * @var \DateTime
      */
     protected $creationDate;
+
+	/**
+	 * @var \DateTime
+	 */
+	protected $expiration;
+
+	/**
+	 * @var int
+	 */
+	protected $callable;
 
     /**
      * @return string
@@ -201,4 +217,51 @@ class Pass {
         $this->id = $id;
     }
 
+	/**
+	 * @return \DateTime
+	 */
+	public function getExpiration()
+	{
+		return $this->expiration;
+	}
+
+	/**
+	 * @param \DateTime $expiration
+	 */
+	public function setExpiration($expiration)
+	{
+		$this->expiration = $expiration;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCallable()
+	{
+		return $this->callable;
+	}
+
+	/**
+	 * @param int $callable
+	 */
+	public function setCallable($callable)
+	{
+		$this->callable = $callable;
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	/**
+	 * @param User $user
+	 */
+	public function setUser($user)
+	{
+		$this->user = $user;
+	}
 }

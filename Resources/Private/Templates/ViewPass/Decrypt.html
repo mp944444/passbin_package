@@ -21,12 +21,13 @@
                         <div class="form-group">
                             <label for="secure" class="col-lg-2 control-label">Secure Note</label>
                             <div class="col-lg-10">
-                                <f:form.textarea property="secure" id="secure" class="form-control" value="{pass.secure}"/>
+                                <f:form.textarea property="secure" id="secure" class="form-control" value="{encrypted}"/>
                             </div>
                         </div>
                     </fieldset>
                 </form>
             </div>
+            <f:link.action action="new" controller="createPass" class="btn btn-primary">Back</f:link.action>
         </div>
     </div>
 </f:section>

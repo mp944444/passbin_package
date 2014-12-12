@@ -1,5 +1,5 @@
 <?php
-namespace Passbin\Base\Controller;
+namespace Passbin\Base\Domain\Repository;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "Passbin.Base".          *
@@ -7,7 +7,11 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Persistence\Repository;
 
-class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
+/**
+ * @Flow\Scope("singleton")
+ */
+class UserRepository extends Repository {
 
 }

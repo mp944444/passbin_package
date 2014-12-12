@@ -3,7 +3,7 @@
   uriPattern: ''
   defaults:
     '@package': 'Passbin.Base'
-    '@controller': 'CreatePass'
+    '@controller': 'createPass'
     '@action': 'new'
 
 -
