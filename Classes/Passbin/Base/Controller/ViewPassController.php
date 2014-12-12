@@ -55,7 +55,7 @@ class ViewPassController extends BaseController {
 					$pass->setCallable($pass->getCallable()-1);
 					$this->passRepository->update($pass);
 				}
-				$encrypted = $this->decryptData($pass->getSecure());
+				$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure()); //->decryptData($pass->getSecure());
 				$this->view->assign('encrypted', $encrypted);
                 $this->view->assign('pass',$pass);
             } else {
