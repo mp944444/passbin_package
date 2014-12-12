@@ -23,6 +23,6 @@ footer p {
     display: inline-table;
 }
 
-#callable{
-    color: black;
+#callable, input{
+    color: #d0d0d0;
 }
