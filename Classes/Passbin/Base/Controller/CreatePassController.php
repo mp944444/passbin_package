@@ -69,21 +69,29 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 		}
 		/** @var User $user */
 		$entrys = array();
+		$expired = array();
 
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$user = $this->userRepository->findOneByAccount($account);
 
 		foreach($user->getPassEntrys() as $entry) {
 			/** @var Pass $entry */
-			if($entry->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s"))
+			if($entry->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") || $entry->getCallable() == 0)
 			{
-				$this->passRepository->remove($entry);
+				$entry->setPassword("");
+				$entry->setSecure("");
+				$this->passRepository->update($entry);
 				$this->persistenceManager->persistAll();
+
+				$expired[] = $entry;
 			} else {
 				$entrys[] = $entry;
 			}
 		}
-		$this->view->assign("entrys", $entrys);
+		$this->view->assignMultiple(array(
+			"entrys" => $entrys,
+			"expired" => $expired
+		));
 	}
 
     /**

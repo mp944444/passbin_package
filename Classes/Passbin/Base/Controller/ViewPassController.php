@@ -32,7 +32,10 @@ class ViewPassController extends BaseController {
 			$expiration = $pass->getExpiration();
 
 			if(date('Y-m-d H:i:s') > $expiration->format("Y-m-d H:i:s")) {
-				$this->passRepository->remove($pass);
+				$pass->setSecure("");
+				$pass->setPassword("");
+				$this->passRepository->update($pass);
+				//$this->passRepository->remove($pass);
 				$this->persistenceManager->persistAll();
 				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
@@ -58,7 +61,10 @@ class ViewPassController extends BaseController {
         if ($pass !== NULL) {
             if ($pass->getPassword() == $password) {
 				if($pass->getCallable() == 1) {
-					$this->passRepository->remove($pass);
+					$pass->setPassword("");
+					$pass->setSecure("");
+					$pass->setCallable(0);
+					$this->passRepository->update($pass);
 					$this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 				} else {
 					$pass->setCallable($pass->getCallable()-1);
