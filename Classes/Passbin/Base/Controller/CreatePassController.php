@@ -7,27 +7,37 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 
 use Passbin\Base\Domain\Model\Pass;
+use Passbin\Base\Domain\Service\NoteReadService;
+use Passbin\Base\Domain\Service\UserStorage;
 use TYPO3\Flow\Annotations as Flow;
 
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
-    /**
-	 * @return void
+	/**
+	 * @var NoteReadService
+	 * @FLow\Inject
 	 */
-	public function indexAction() {
-		$this->view->assign('foos', array(
-			'bar', 'baz'
-		));
-	}
+	protected $noteReadService;
+
+	/**
+	 * @var UserStorage
+	 * @Flow\Inject
+	 */
+	protected $userStorage;
 
     /**
-	 * @param array $entrys
      * @return void
      */
-    public function newAction($entrys) {
-		$this->view->assign("entrys", $entrys);
-        $callableOptions = array(1,2,3,4,5);
-		$this->view->assign("callableOptions", $callableOptions);
+    public function newAction() {
+		$entrys = array();
+		$entrys = $this->noteReadService->readUserNotes($this->userStorage->getUser());
+
+		$callableOptions = array(1,2,3,4,5);
+
+		$this->view->assignMultiple(array(
+			"entrys" => $entrys,
+			"callableOptions", $callableOptions
+		));
     }
 
     /**

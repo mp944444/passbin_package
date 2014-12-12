@@ -8,6 +8,8 @@ namespace Passbin\Base\Controller;
 
 use Passbin\Base\Domain\Model\User;
 use Passbin\Base\Domain\Model\Pass;
+use Passbin\Base\Domain\Service\UserStorage;
+use Passbin\Base\Domain\Service\NoteReadService;
 use TYPO3\Flow\Annotations as Flow;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
@@ -17,6 +19,18 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @Flow\Inject
 	 */
 	protected $accountFactory;
+
+	/**
+	 * @var UserStorage
+	 * @Flow\Inject
+	 */
+	protected $userStorage;
+
+	/**
+	 * @var NoteReadService
+	 * @Flow\Inject
+	 */
+	protected $noteReadService;
 
 	/**
 	 * @var \TYPO3\Flow\Security\AccountRepository
@@ -76,27 +90,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
-			/** @var User $user */
-			$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider");
-			$user = $this->userRepository->findOneByAccount($account);
 
-			$entrys = array();
-
-			foreach($user->getPassEntrys() as $entry) {
-				/**
-				 * @var Pass $entry
-				 */
-				$entrys[] = array(
-					"headline" => $entry->getHeadline(),
-					"creationdate" => $entry->getCreationDate()->format('d.m.Y H:i:s'),
-					"expiration" => $entry->getExpiration()->format('d.m.Y H:i:s'),
-					"callable" => $entry->getCallable(),
-					"id" => $entry->getId()
-				);
-			}
+			// Name speichern
+			$this->userStorage->addUser($username);
 
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("new", "CreatePass", NULL, array("entrys" => $entrys));
+
+			$this->redirect("new", "CreatePass");
 		} else {
 			$this->redirect("start", "User");
 		}
