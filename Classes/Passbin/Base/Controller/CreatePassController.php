@@ -53,8 +53,10 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$loginStatus = 0;
 		}
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
-		$this->view->assign("login", $loginStatus);
-		$this->view->assign("callableOptions", $callableOptions);
+		$this->view->assignMultiple(array(
+			"login" => $loginStatus,
+			"callableOptions" => $callableOptions
+		));
 	}
 
 	/**

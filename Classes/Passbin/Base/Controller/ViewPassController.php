@@ -45,9 +45,11 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			if($this->authenticationManager->isAuthenticated()) {
 				$login = 1;
 			}
-			$this->view->assign("login", $login);
-			$this->view->assign('passId', $pass->getId());
-			$this->view->assign('found', true);
+			$this->view->assignMultiple(array(
+				"login" => $login,
+				"passId" => $pass->getId(),
+				"found" => true
+			));
 		} else {
 			$this->view->assign('found', false);
 		}
@@ -80,9 +82,11 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				if($this->authenticationManager->isAuthenticated()) {
 					$login = 1;
 				}
-				$this->view->assign("login", $login);
-				$this->view->assign('encrypted', $encrypted);
-                $this->view->assign('pass',$pass);
+				$this->view->assignMultiple(array(
+					"login" => $login,
+					"encrypted" => $encrypted,
+					"pass" => $pass
+				));
             } else {
                 $this->addFlashMessage('Wrong Password', 'password', \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
                 $this->redirectToRequest($this->request->getReferringRequest());
