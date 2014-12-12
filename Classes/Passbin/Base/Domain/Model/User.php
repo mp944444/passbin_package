@@ -36,6 +36,11 @@ class User {
 	protected $lastname;
 
 	/**
+	 * @var \DateTime
+	 */
+	protected $lastLogin;
+
+	/**
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	public function getAccount()
@@ -107,5 +112,21 @@ class User {
 			$this->passEntrys->add($pass);
 			$pass->setUser($this);
 		}
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getLastLogin()
+	{
+		return $this->lastLogin;
+	}
+
+	/**
+	 * @param \DateTime $lastLogin
+	 */
+	public function setLastLogin($lastLogin)
+	{
+		$this->lastLogin = $lastLogin;
 	}
 }
