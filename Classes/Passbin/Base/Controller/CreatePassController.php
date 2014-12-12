@@ -30,6 +30,14 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	 */
 	protected $authenticationManager;
 
+	/**
+	 * passRepository
+	 *
+	 * @var \Passbin\Base\Domain\Repository\PassRepository
+	 * @Flow\Inject
+	 */
+	protected $passRepository;
+
     /**
      * @return void
      */
@@ -41,9 +49,14 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 		$user = $this->userRepository->findOneByAccount($account);
 
 		foreach($user->getPassEntrys() as $entry) {
-			/** @var User $entry */
-			// @todo überprüfen ob das expiration datum kleiner als das aktuelle ist -> falls ja löschen
-			$entrys[] = $entry;
+			/** @var Pass $entry */
+			if($entry->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s"))
+			{
+				$this->passRepository->remove($entry);
+				$this->persistenceManager->persistAll();
+			} else {
+				$entrys[] = $entry;
+			}
 		}
 
 		$callableOptions = array(1,2,3,4,5);
@@ -93,7 +106,10 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 		$newPass->setExpiration(new \DateTime($expiration));
 		$newPass->setCallable($callableOptions[$callable]);
         $newPass->setId(uniqid());
-        $newPass->setSecure($this->encryptData($newPass->getSecure()));
+
+		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
+       // $newPass->setSecure($this->encryptData($newPass->getSecure()));
+
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
         $this->passRepository->add($newPass);
