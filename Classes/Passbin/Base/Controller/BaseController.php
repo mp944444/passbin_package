@@ -25,6 +25,7 @@ class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $authenticationManager;
 
 
+
 	public function initializeAction() {
 		if(!$this->authenticationManager->isAuthenticated()) {
 			$this->addFlashMessage("Please log in first!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
@@ -33,6 +34,9 @@ class BaseController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
     /**
+	 *
+	 * @todo auslagern in einen EncryptionService
+	 * @todo functionen als static machen
      * getEncKey
      *
      * @return string

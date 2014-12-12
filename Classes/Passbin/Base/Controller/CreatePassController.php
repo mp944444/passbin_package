@@ -7,17 +7,10 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 
 use Passbin\Base\Domain\Model\Pass;
-use Passbin\Base\Domain\Service\NoteReadService;
-use Passbin\Base\Domain\Service\UserStorage;
+use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
 
 class CreatePassController extends \Passbin\Base\Controller\BaseController {
-
-	/**
-	 * @var NoteReadService
-	 * @FLow\Inject
-	 */
-	protected $noteReadService;
 
 	/**
 	 * @var \TYPO3\Flow\Security\AccountRepository
@@ -26,23 +19,31 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	protected $accountRepository;
 
 	/**
-	 * @var UserStorage
-	 * @Flow\Inject
-	 */
-	protected $userStorage;
-
-	/**
 	 * @var \Passbin\Base\Domain\Repository\UserRepository
 	 * @Flow\Inject
 	 */
 	protected $userRepository;
 
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
     /**
      * @return void
      */
     public function newAction() {
+		/** @var User $user */
 		$entrys = array();
-		$entrys = $this->noteReadService->readUserNotes($this->userStorage->getUser());
+
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $this->userRepository->findOneByAccount($account);
+
+		foreach($user->getPassEntrys() as $entry) {
+			/** @var User $entry */
+			$entrys[] = $entry;
+		}
 
 		$callableOptions = array(1,2,3,4,5);
 
@@ -67,11 +68,12 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
      * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
      * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
-	 * @param string $callable
-	 * @param string $expiration
+     * @param string $callable
+     * @param string $expiration
      */
     public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $callable, $expiration) {
 
+		// @ todo auslagern der Optionen in Settings.yaml
 		$callableOptions = array(1,2,3,4,5);
 
 		if($expiration == "") {

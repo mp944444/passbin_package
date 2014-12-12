@@ -8,8 +8,6 @@ namespace Passbin\Base\Controller;
 
 use Passbin\Base\Domain\Model\User;
 use Passbin\Base\Domain\Model\Pass;
-use Passbin\Base\Domain\Service\UserStorage;
-use Passbin\Base\Domain\Service\NoteReadService;
 use TYPO3\Flow\Annotations as Flow;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
@@ -19,18 +17,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @Flow\Inject
 	 */
 	protected $accountFactory;
-
-	/**
-	 * @var UserStorage
-	 * @Flow\Inject
-	 */
-	protected $userStorage;
-
-	/**
-	 * @var NoteReadService
-	 * @Flow\Inject
-	 */
-	protected $noteReadService;
 
 	/**
 	 * @var \TYPO3\Flow\Security\AccountRepository
@@ -77,9 +63,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @throws \Exception
-	 * @param string $username
 	 */
-	public function authenticateAction($username = "") {
+	public function authenticateAction() {
 		$check = false;
 		try{
 			$this->authenticationManager->authenticate();
@@ -90,15 +75,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
-
-			$this->userStorage->setUser($username);
-
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-
 			$this->redirect("new", "CreatePass");
 		} else {
 			$this->redirect("start", "User");
 		}
+
+		// @todo Login, logout und authenticate in LoginController auslagern
 	}
 
 	/**
@@ -121,9 +104,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password) {
 
+		// todo testen ob -> count() geht
 		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-			$this->redirect("register", "User", NULL, $settings = array(
+			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname
 			));
