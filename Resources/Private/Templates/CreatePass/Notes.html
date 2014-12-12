@@ -38,7 +38,7 @@
                                     </f:else>
                                 </f:if>
                             </div>
-                            <div><a href="http://passbin.vm/id/{entry.id}">{entry.id}</a></div>
+                            <div><f:form.textfield name="link" id="link" class="form-control" value="http://passbin.vm/id/{entry.id}"/></div>
                         </div>
                     </f:for>
                 </f:then>
@@ -48,6 +48,7 @@
             </f:if>
         </div>
     </div>
+       </div>
     <div class="row expiredrow">
         <div class="col-lg-8 col-lg-offset-2">
                 <h4>Expired Notes</h4>
