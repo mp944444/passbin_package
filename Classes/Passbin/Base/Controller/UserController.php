@@ -58,6 +58,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function registerAction($firstname = "", $lastname = "") {
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("new", "createPass");
+		}
 		$this->view->assignMultiple(array(
 			"firstname" => $firstname,
 			"lastname" => $lastname
