@@ -7,7 +7,6 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 
 use Passbin\Base\Domain\Model\User;
-use Passbin\Base\Domain\Model\Pass;
 use TYPO3\Flow\Annotations as Flow;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
@@ -25,9 +24,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $accountRepository;
 
 	/**
- * @var \Passbin\Base\Domain\Repository\UserRepository
- * @Flow\Inject
- */
+	* @var \Passbin\Base\Domain\Repository\UserRepository
+	* @Flow\Inject
+	*/
 	protected $userRepository;
 
 	/**
@@ -41,7 +40,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
 	protected $authenticationManager;
-
 
 	/**
 	 * @return void
@@ -74,7 +72,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password) {
-
 		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
@@ -82,21 +79,15 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"lastname" => $lastname
 			));
 		} else {
-
 			$user = new User();
 			$user->setFirstname($firstname);
 			$user->setLastname($lastname);
-
 			$account = $this->accountFactory->createAccountWithPassword($username, $password);
-
 			$user->setAccount($account);
-
 			$this->userRepository->add($user);
 			$this->accountRepository->add($account);
-
 			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("start", "User");
 		}
 	}
-
 }

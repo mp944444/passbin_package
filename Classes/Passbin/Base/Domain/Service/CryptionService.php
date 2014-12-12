@@ -8,9 +8,6 @@ use TYPO3\Flow\Annotations as Flow;
  */
 class CryptionService {
 	/**
-	 *
-	 * getEncKey
-	 *
 	 * @return string
 	 */
 	static function getEncKey() {
@@ -21,8 +18,6 @@ class CryptionService {
 	}
 
 	/**
-	 * encryptData
-	 *
 	 * @param string $data
 	 * @throws \TYPO3\Flow\Exception
 	 * @return string
@@ -31,7 +26,6 @@ class CryptionService {
 		if(!function_exists('mcrypt_module_open')) {
 			throw new \TYPO3\Flow\Exception("mcrypt not found. Please install php-mcrypt.");
 		}
-
 		$key = CryptionService::getEncKey();
 		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
 		$passcrypt = trim(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, mb_strcut($key,'0','32'), trim($data), MCRYPT_MODE_ECB, $iv));
@@ -40,8 +34,6 @@ class CryptionService {
 	}
 
 	/**
-	 * decryptData
-	 *
 	 * @param string $data
 	 * @throws \TYPO3\Flow\Exception
 	 * @return string
@@ -50,7 +42,6 @@ class CryptionService {
 		if(!function_exists('mcrypt_module_open')) {
 			throw new \TYPO3\Flow\Exception("mcrypt not found. Please install php-mcrypt.");
 		}
-
 		$key = CryptionService::getEncKey();
 		$decoded = base64_decode($data);
 		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);

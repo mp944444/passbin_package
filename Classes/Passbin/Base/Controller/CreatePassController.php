@@ -32,8 +32,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $authenticationManager;
 
 	/**
-	 * passRepository
-	 *
 	 * @var \Passbin\Base\Domain\Repository\PassRepository
 	 * @Flow\Inject
 	 */
@@ -57,7 +55,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assign("login", $loginStatus);
 		$this->view->assign("callableOptions", $callableOptions);
-    }
+	}
 
 	/**
 	 * @return void
@@ -70,10 +68,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		/** @var User $user */
 		$entrys = array();
 		$expired = array();
-
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$user = $this->userRepository->findOneByAccount($account);
-
 		foreach($user->getPassEntrys() as $entry) {
 			/** @var Pass $entry */
 			if($entry->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") || $entry->getCallable() == 0)
@@ -82,7 +78,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$entry->setSecure("");
 				$this->passRepository->update($entry);
 				$this->persistenceManager->persistAll();
-
 				$expired[] = $entry;
 			} else {
 				$entrys[] = $entry;
@@ -94,39 +89,35 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		));
 	}
 
-    /**
-     * @return void
-     * @param string $passId
-     */
+	/**
+	* @return void
+	* @param string $passId
+	*/
     public function generateLinkAction($passId) {
-        $link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
-        $this->view->assign("link", $link);
-    }
+		$link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
+		$this->view->assign("link", $link);
+	}
 
-    /**
-     * @return void
-     * @param \Passbin\Base\Domain\Model\Pass $newPass
-     * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
-     * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
-     * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
-     * @param string $expiration
-     * @param string $callable
-     */
-    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
-
+	/**
+	* @return void
+	* @param \Passbin\Base\Domain\Model\Pass $newPass
+	* @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
+	* @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
+	* @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
+	* @param string $expiration
+	* @param string $callable
+	*/
+	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
-
 		if($expiration == "") {
 			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
 		} else {
 			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
-
 			if($expiration <= date('Y-m-d H:i:s')) {
 				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
 		}
-
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$newPass->setUser($this->userRepository->findOneByAccount($account));
 		$newPass->setExpiration(new \DateTime($expiration));
@@ -135,21 +126,19 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		} else {
 			$newPass->setCallable($callableOptions[$callable]);
 		}
-        $newPass->setId(uniqid());
+		$newPass->setId(uniqid());
 		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
-        $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
-        $newPass->setCreationDate(new \DateTime("now"));
-        $this->passRepository->add($newPass);
-
-        if ($newPass->getSendEmail() === "yes") {
-            $mail = new \TYPO3\SwiftMailer\Message();
-            $mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
-                ->setTo(array($newPass->getEmail() => ''))
-                ->setSubject('Someone shared a secure Note with you!')
-                ->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
-                ->send();
-        }
-
-        $this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
-    }
+		$newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
+		$newPass->setCreationDate(new \DateTime("now"));
+		$this->passRepository->add($newPass);
+		if ($newPass->getSendEmail() === "yes") {
+			$mail = new \TYPO3\SwiftMailer\Message();
+			$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
+				->setTo(array($newPass->getEmail() => ''))
+				->setSubject('Someone shared a secure Note with you!')
+				->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
+				->send();
+		}
+		$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
+	}
 }

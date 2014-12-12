@@ -29,18 +29,14 @@ class PassSendMailValidator extends \TYPO3\Flow\Validation\Validator\AbstractVal
      */
     protected function isValid($value)
     {
-
         if ($value->getSendEmail() == "yes") {
-
             $emailValidator = new \TYPO3\Flow\Validation\Validator\EmailAddressValidator();
             $emailvalid = $emailValidator->validate($value->getEmail());
-
             $notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
             $notemptyvalid = $notEmptyValidator->validate($value->getEmail());
             if ($notemptyvalid->hasErrors()) {
                 $this->addError($notemptyvalid->getFirstError()->getMessage(), $notemptyvalid->getFirstError()->getCode(), $notemptyvalid->getFirstError()->getArguments());
             }
-
         }
     }
 }

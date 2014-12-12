@@ -40,7 +40,7 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			if ($this->authenticationManager->isAuthenticated()) {
 				$check = true;
 			}
-		} catch (\Exception $e){
+		} catch(\Exception $e){
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
@@ -55,5 +55,4 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("start", "User");
 		}
 	}
-
 }
