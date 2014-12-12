@@ -84,13 +84,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Callable</label>
+                            <label for="secure" class="col-lg-2 control-label">Callable <br>(Default: 1 time)</label>
                             <div class="col-lg-10">
-                                <f:form.select name="callable" value="1" options="{callableOptions}" prependOptionLabel="please select" prependOptionValue=""/>
+                                <f:form.select id="callable" name="callable" options="{callableOptions}" prependOptionLabel="please select" prependOptionValue=""/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Expiration date</label>
+                            <label for="secure" class="col-lg-2 control-label">Expiration date (Default: +1 hour)</label>
                             <div class="col-lg-10">
                                 <input type="datetime-local" name="expiration">
                             </div>
