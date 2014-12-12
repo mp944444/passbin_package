@@ -97,7 +97,14 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	*/
     public function generateLinkAction($passId) {
 		$link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
-		$this->view->assign("link", $link);
+		$login = 0;
+		if($this->authenticationManager->isAuthenticated()) {
+			$login = 1;
+		}
+		$this->view->assignMultiple(array(
+			"link" => $link,
+			"login" => $login
+		));
 	}
 
 	/**
