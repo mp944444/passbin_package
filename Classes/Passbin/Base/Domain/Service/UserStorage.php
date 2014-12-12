@@ -17,7 +17,7 @@ class UserStorage {
 	 * @return void
 	 * @Flow\Session(autoStart = TRUE)
 	 */
-	public function addUser($user = "") {
+	public function setUser($user = "") {
 		$this->username = $user;
 	}
 

@@ -32,15 +32,12 @@ class NoteReadService {
 
 		/** @var User $user */
 		$account = $ar->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider");
-		//$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider");
 
 		$user = $ur->findOneByAccount($account);
-		//$user = $this->userRepository->findOneByAccount($account);
 
 		$entrys = array();
 
 		foreach($user->getPassEntrys() as $entry) {
-
 			$entrys[] = array(
 				"headline" => $entry->getHeadline(),
 				"creationdate" => $entry->getCreationDate()->format('d.m.Y H:i:s'),

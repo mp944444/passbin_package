@@ -20,10 +20,22 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 	protected $noteReadService;
 
 	/**
+	 * @var \TYPO3\Flow\Security\AccountRepository
+	 * @Flow\Inject
+	 */
+	protected $accountRepository;
+
+	/**
 	 * @var UserStorage
 	 * @Flow\Inject
 	 */
 	protected $userStorage;
+
+	/**
+	 * @var \Passbin\Base\Domain\Repository\UserRepository
+	 * @Flow\Inject
+	 */
+	protected $userRepository;
 
     /**
      * @return void
@@ -36,7 +48,7 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 
 		$this->view->assignMultiple(array(
 			"entrys" => $entrys,
-			"callableOptions", $callableOptions
+			"callableOptions" => $callableOptions
 		));
     }
 
@@ -68,11 +80,13 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
 
 			if($expiration <= date('Y-m-d H:i:s')) {
-				$this->addFlashMessage("Expiration Date is invalid", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
 		}
 
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($this->userStorage->getUser(), "DefaultProvider");
+		$newPass->setUser($this->userRepository->findOneByAccount($account));
 		$newPass->setExpiration(new \DateTime($expiration));
 		$newPass->setCallable($callableOptions[$callable]);
         $newPass->setId(uniqid());

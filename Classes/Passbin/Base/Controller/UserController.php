@@ -91,8 +91,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		if($check === true) {
 
-			// Name speichern
-			$this->userStorage->addUser($username);
+			$this->userStorage->setUser($username);
 
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 
