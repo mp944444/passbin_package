@@ -5,7 +5,7 @@ namespace Passbin\Base\Controller;
  * This script belongs to the TYPO3 Flow package "Passbin.Base".          *
  *                                                                        *
  *                                                                        */
-
+use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
 
 class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
@@ -14,6 +14,12 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
 	protected $authenticationManager;
+
+	/**
+	 * @var \Passbin\Base\Domain\Repository\UserRepository
+	 * @Flow\Inject
+	 */
+	protected $userRepository;
 
 	/**
 	 * @return void
@@ -38,6 +44,11 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
+			/** @var User $user */
+			$account = $this->authenticationManager->getSecurityContext()->getAccount();
+			$user = $this->userRepository->findOneByAccount($account);
+			$user->setLastLogin(new \DateTime('now'));
+			$this->userRepository->update($user);
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("new", "CreatePass");
 		} else {
