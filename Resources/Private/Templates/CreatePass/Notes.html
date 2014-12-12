@@ -5,6 +5,12 @@
 <f:section name="Content">
     <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
     <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h4>Active Notes</h4>
+            <legend></legend>
+        </div>
+    </div>
     <div class="row yournotesrow">
     <div class="col-lg-8 col-lg-offset-2">
         <div class="well bs-component">
@@ -42,8 +48,13 @@
             </f:if>
         </div>
     </div>
-        Expired
-    <div class="row yournotesrow">
+    <div class="row expiredrow">
+        <div class="col-lg-8 col-lg-offset-2">
+                <h4>Expired Notes</h4>
+            <legend></legend>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
                 <div class="noterow">
@@ -59,21 +70,12 @@
                                 <div>{entry.headline}</div>
                                 <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
                                 <div><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></div>
-                                <div>
-                                    <f:if condition="{entry.callable} < 2">
-                                        <f:then>
-                                            {entry.callable} time
-                                        </f:then>
-                                        <f:else>
-                                            {entry.callable} times
-                                        </f:else>
-                                    </f:if>
-                                </div>
+                                <div>0</div>
                             </div>
                         </f:for>
                     </f:then>
                     <f:else>
-                        <i>No active secure notes</i>
+                        <i>No expired secure notes</i>
                     </f:else>
                 </f:if>
             </div>
