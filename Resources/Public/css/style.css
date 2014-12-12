@@ -36,10 +36,9 @@ footer p {
 }
 
 .noterow:last-of-type {
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 
-#logout {
+#logout, #login, #createnewnote, #notregistered {
     margin-left: 10px;
 }
-

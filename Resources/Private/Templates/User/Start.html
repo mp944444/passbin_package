@@ -3,7 +3,7 @@
 <f:section name="Title">Login</f:section>
 
 <f:section name="Content">
-
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
                                 <f:form.submit class="btn btn-primary" value="Login" />
-                                <f:link.action id="back" action="register" class="btn btn-primary">Sign up</f:link.action>
+                                <f:link.action id="notregistered" action="register" class="btn btn-primary">Not registered?</f:link.action>
                             </div>
                         </div>
                     </fieldset>
