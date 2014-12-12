@@ -49,6 +49,14 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @return void
      */
     public function newAction() {
+		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
+		$this->view->assign("callableOptions", $callableOptions);
+    }
+
+	/**
+	 * @return void
+	 */
+	public function notesAction() {
 		/** @var User $user */
 		$entrys = array();
 
@@ -65,14 +73,8 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 				$entrys[] = $entry;
 			}
 		}
-
-		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
-
-		$this->view->assignMultiple(array(
-			"entrys" => $entrys,
-			"callableOptions" => $callableOptions
-		));
-    }
+		$this->view->assign("entrys", $entrys);
+	}
 
     /**
      * @return void

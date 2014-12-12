@@ -3,6 +3,7 @@ $(document).ready(function() {
         $("#usernamereader").val($(this).val());
     });
 
+    $('#yournotes').appendTo('ul.nav.navbar-nav.navbar-right');
     $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
 
     $('#sendEmail').change(function() {
