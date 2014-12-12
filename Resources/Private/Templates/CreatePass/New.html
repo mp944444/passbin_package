@@ -5,10 +5,10 @@
 <f:section name="Content">
     <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
     <div class="col-lg-8 col-lg-offset-2">
-        Your Notes
+        <h4>Your Notes</h4>
         <legend></legend>
     </div>
-    <div class="row">
+    <div class="row yournotesrow">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
                 <div class="noterow">
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="col-lg-8 col-lg-offset-2">
-        Create a new Note
+        <h4>Create a new Note</h4>
         <legend></legend>
     </div>
     <div class="row">
@@ -86,7 +86,7 @@
                         <div class="form-group">
                             <label for="secure" class="col-lg-2 control-label">Callable <br>(Default: 1 time)</label>
                             <div class="col-lg-10">
-                                <f:form.select id="callable" name="callable" options="{callableOptions}" prependOptionLabel="please select" prependOptionValue=""/>
+                                <f:form.select id="callable" class="form-control"  name="callable" options="{callableOptions}" prependOptionLabel="please select" prependOptionValue=""/>
                             </div>
                         </div>
                         <div class="form-group">

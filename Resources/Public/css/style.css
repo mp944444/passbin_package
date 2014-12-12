@@ -26,3 +26,15 @@ footer p {
 #callable, input{
     color: #d0d0d0;
 }
+
+.yournotesrow {
+    padding-bottom: 40px;
+}
+
+.noterow {
+    padding-bottom: 20px;
+}
+
+.noterow:last-of-type {
+    padding-bottom: 0px;
+}

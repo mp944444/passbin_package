@@ -20,7 +20,7 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function logoutAction() {
 		$this->authenticationManager->logout();
-		$this->addFlashMessage("You've been logout", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+		$this->addFlashMessage("You've been logged out", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 		$this->redirect("start", "User");
 	}
 
