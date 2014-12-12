@@ -89,10 +89,10 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
      * @Flow\Validate(argumentName="newPass.secure", type="NotEmpty")
      * @Flow\Validate(argumentName="newPass.password", type="StringLength", options={"minimum"=5,"maximum"=100})
      * @Flow\Validate(argumentName="newPass", type="\Passbin\Base\Validator\PassSendMailValidator")
-     * @param string $callable
      * @param string $expiration
+     * @param string $callable
      */
-    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $callable, $expiration) {
+    public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
 
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
@@ -110,12 +110,13 @@ class CreatePassController extends \Passbin\Base\Controller\BaseController {
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$newPass->setUser($this->userRepository->findOneByAccount($account));
 		$newPass->setExpiration(new \DateTime($expiration));
-		$newPass->setCallable($callableOptions[$callable]);
+		if($callable == NULL) {
+			$newPass->setCallable($callableOptions[0]);
+		} else {
+			$newPass->setCallable($callableOptions[$callable]);
+		}
         $newPass->setId(uniqid());
-
 		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
-       // $newPass->setSecure($this->encryptData($newPass->getSecure()));
-
         $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
         $newPass->setCreationDate(new \DateTime("now"));
         $this->passRepository->add($newPass);
