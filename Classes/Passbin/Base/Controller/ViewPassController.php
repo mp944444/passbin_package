@@ -76,6 +76,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					$this->passRepository->update($pass);
 					$this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 				} else {
+					$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure()); //->decryptData($pass->getSecure());
 					$pass->setCallable($pass->getCallable()-1);
 					$this->passRepository->update($pass);
 				}
