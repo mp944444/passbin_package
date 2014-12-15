@@ -34,11 +34,11 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @throws \Exception
 	 */
 	public function authenticateAction() {
-		$check = 0;
+		$check = false;
 		try{
 			$this->authenticationManager->authenticate();
 			if ($this->authenticationManager->isAuthenticated()) {
-				$check = 1;
+				$check = true;
 			}
 		} catch(\Exception $e){
 			$this->addFlashMessage("Username and / or password is wrong!", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
