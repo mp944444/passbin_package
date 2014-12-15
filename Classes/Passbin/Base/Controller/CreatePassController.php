@@ -135,7 +135,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"headline" => $newPass->getHeadline(),
 				"expiration" => $expiration,
 				"callable" => $callable,
-				"email" => $newPass->getEmail(),
+				"email" => $newPass->getEmail()
 			));
 		} else {
 			$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");

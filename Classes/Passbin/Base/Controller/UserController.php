@@ -51,15 +51,17 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
+	 * @param string $username
 	 * @param string $firstname
 	 * @param string $lastname
 	 * @return void
 	 */
-	public function registerAction($firstname = "", $lastname = "") {
+	public function registerAction($username = "", $firstname = "", $lastname = "") {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("new", "createPass");
 		}
 		$this->view->assignMultiple(array(
+			"username" => $username,
 			"firstname" => $firstname,
 			"lastname" => $lastname
 		));
@@ -87,6 +89,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname
+				));
+			} else if($firstname == "" || $lastname == ""){
+				$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+				$this->redirect("register", "User", NULL, array(
+					"firstname" => $firstname,
+					"lastname" => $lastname,
+					"username" => $username
 				));
 			} else {
 				$user = new User();
