@@ -48,3 +48,7 @@ footer p {
 #logout, #login, #createnewnote, #notregistered {
     margin-left: 10px;
 }
+
+#loginbtn, #registerbtn {
+    margin-top: 15px;
+}
