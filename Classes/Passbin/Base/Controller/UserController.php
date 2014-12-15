@@ -82,8 +82,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"firstname" => $firstname,
 				"lastname" => $lastname
 			));
-		} else {
-			if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
+		} else if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 				$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
@@ -102,5 +101,4 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->redirect("start", "User");
 			}
 		}
-	}
 }
