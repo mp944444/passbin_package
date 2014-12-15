@@ -72,22 +72,34 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password) {
-		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
-			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+	$captcha = $_POST['g-recaptcha-response'];
+	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le0Sf8SAAAAAN8K5IbEmosTGwdPCYHn_zE9ykqc&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
+	$check = strpos($response, "true");
+
+		if($check == false) {
+			$this->addFlashMessage("Please check the captcha first", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname
 			));
 		} else {
-			$user = new User();
-			$user->setFirstname($firstname);
-			$user->setLastname($lastname);
-			$account = $this->accountFactory->createAccountWithPassword($username, $password);
-			$user->setAccount($account);
-			$this->userRepository->add($user);
-			$this->accountRepository->add($account);
-			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("start", "User");
+			if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
+				$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+				$this->redirect("register", "User", NULL, array(
+					"firstname" => $firstname,
+					"lastname" => $lastname
+				));
+			} else {
+				$user = new User();
+				$user->setFirstname($firstname);
+				$user->setLastname($lastname);
+				$account = $this->accountFactory->createAccountWithPassword($username, $password);
+				$user->setAccount($account);
+				$this->userRepository->add($user);
+				$this->accountRepository->add($account);
+				$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+				$this->redirect("start", "User");
+			}
 		}
 	}
 }
