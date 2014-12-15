@@ -91,6 +91,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				));
 			} else {
 				$user = new User();
+				$user->setLastLogin(new \DateTime(date("Y-m-d H:i:s")));
 				$user->setFirstname($firstname);
 				$user->setLastname($lastname);
 				$account = $this->accountFactory->createAccountWithPassword($username, $password);
