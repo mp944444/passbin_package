@@ -1,7 +1,7 @@
 <f:layout name="Default" />
 <f:section name="Title">Create a new Note</f:section>
 <f:section name="Content">
-    <f:if condition="{login} == 1">
+    <f:if condition="{login} == 0">
         <f:then>
             <f:link.action id="yournotes" action="notes" controller="createPass" class="btn btn-primary">Your Notes</f:link.action>
             <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>

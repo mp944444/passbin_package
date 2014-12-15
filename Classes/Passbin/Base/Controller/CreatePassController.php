@@ -48,9 +48,9 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      */
     public function newAction() {
 		if($this->authenticationManager->isAuthenticated()) {
-			$loginStatus = 1;
-		} else {
 			$loginStatus = 0;
+		} else {
+			$loginStatus = 1;
 		}
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assignMultiple(array(
