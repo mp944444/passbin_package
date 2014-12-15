@@ -44,9 +44,13 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $configurationManager;
 
     /**
+	 * @param string $headline
+	 * @param int $callable
+	 * @param string $expiration
+	 * @param string $email
      * @return void
      */
-    public function newAction() {
+    public function newAction($headline = "", $callable = 0, $expiration = "", $email = "") {
 		if($this->authenticationManager->isAuthenticated()) {
 			$loginStatus = 0;
 		} else {
@@ -54,6 +58,10 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assignMultiple(array(
+			"headline" => $headline,
+			"expiration" => $expiration,
+			"callable" => $callable,
+			"email" => $email,
 			"login" => $loginStatus,
 			"callableOptions" => $callableOptions
 		));
@@ -117,7 +125,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	* @param string $callable
 	*/
 	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
-
 		$captcha = $_POST['g-recaptcha-response'];
 		$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le0Sf8SAAAAAN8K5IbEmosTGwdPCYHn_zE9ykqc&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
 		$check = strpos($response, "true");
@@ -126,8 +133,9 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Please check the captcha first", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("new", "CreatePass", NULL, array(
 				"headline" => $newPass->getHeadline(),
-				"callable" => $newPass->getCallable(),
-				"expiration" => $newPass->getExpiration()
+				"expiration" => $expiration,
+				"callable" => $callable,
+				"email" => $newPass->getEmail(),
 			));
 		} else {
 			$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");

@@ -9,6 +9,11 @@ $(document).ready(function() {
     $('#yournotes').appendTo('ul.nav.navbar-nav.navbar-right');
     $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
 
+
+    if($('#email').val() != "") {
+        $('#email').parent().parent().slideDown();
+    }
+
     $('#sendEmail').change(function() {
         if($(this).is(":checked")) {
             $('#email').parent().parent().slideDown();

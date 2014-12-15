@@ -46,13 +46,13 @@
                         <div class="form-group">
                             <label for="secure" class="col-lg-2 control-label">Callable <br>(Default: 1 time)</label>
                             <div class="col-lg-10">
-                                <f:form.select id="callable" class="form-control"  name="callable" options="{callableOptions}" prependOptionLabel="Please select" prependOptionValue=""/>
+                                <f:form.select id="callable" class="form-control" value="{callable}" name="callable" options="{callableOptions}" prependOptionLabel="Please select" prependOptionValue=""/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="secure" class="col-lg-2 control-label">Expiration date (Default: +1 hour)</label>
                             <div class="col-lg-10">
-                                <input type="datetime-local" name="expiration">
+                                <input type="datetime-local" value="{expiration}" name="expiration">
                             </div>
                         </div>
                         <div class="form-group">
@@ -70,7 +70,7 @@
                         <div class="form-group" style="display: none">
                             <label for="email" class="col-lg-2 control-label">Email</label>
                             <div class="col-lg-10">
-                                <f:form.textfield class="form-control" id="email" property="email" placeholder="Email" errorClass="hasError" />
+                                <f:form.textfield class="form-control" id="email" value="{email}" property="email" placeholder="Email" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
