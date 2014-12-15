@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
-                <f:form action="create" class="form-horizontal findErrors" name="newPass" object="{newPass}">
+                <f:form action="create" class="form-horizontal findErrors" name="newPass" object="{newPass}" method="POST">
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
                             <div class="alert alert-danger">
@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="headline" class="col-lg-2 control-label">Description</label>
                             <div class="col-lg-10">
-                                <f:form.textfield property="headline" id="headline" class="form-control" placeholder="This is a super secure Password" errorClass="hasError" />
+                                <f:form.textfield property="headline" value="{headline}" id="headline" class="form-control" placeholder="This is a super secure Password" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -75,6 +75,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
+                                <div class="g-recaptcha" data-sitekey="6Le0Sf8SAAAAAMXFrjit-ATcHLtJaLA1sku-5BdG"></div>
                                 <f:form.submit class="btn btn-primary" value="Create" />
                             </div>
                         </div>

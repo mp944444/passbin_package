@@ -117,37 +117,51 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	* @param string $callable
 	*/
 	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
-		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
-		if($expiration == "") {
-			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
+
+		$captcha = $_POST['g-recaptcha-response'];
+		$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le0Sf8SAAAAAN8K5IbEmosTGwdPCYHn_zE9ykqc&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		$check = strpos($response, "true");
+
+		if($check == false) {
+			$this->addFlashMessage("Please check the captcha first", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("new", "CreatePass", NULL, array(
+				"headline" => $newPass->getHeadline(),
+				"callable" => $newPass->getCallable(),
+				"expiration" => $newPass->getExpiration()
+			));
 		} else {
-			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
-			if($expiration <= date('Y-m-d H:i:s')) {
-				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
-				$this->redirect("new", "CreatePass");
+			$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
+			if($expiration == "") {
+				$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
+			} else {
+				$expiration = date('Y-m-d H:i:s', strtotime($expiration));
+				if($expiration <= date('Y-m-d H:i:s')) {
+					$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+					$this->redirect("new", "CreatePass");
+				}
 			}
+			$account = $this->authenticationManager->getSecurityContext()->getAccount();
+			$newPass->setUser($this->userRepository->findOneByAccount($account));
+			$newPass->setExpiration(new \DateTime($expiration));
+			if($callable == NULL) {
+				$newPass->setCallable($callableOptions[0]);
+			} else {
+				$newPass->setCallable($callableOptions[$callable]);
+			}
+			$newPass->setId(uniqid());
+			$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
+			$newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
+			$newPass->setCreationDate(new \DateTime("now"));
+			$this->passRepository->add($newPass);
+			if ($newPass->getSendEmail() === "yes") {
+				$mail = new \TYPO3\SwiftMailer\Message();
+				$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
+					->setTo(array($newPass->getEmail() => ''))
+					->setSubject('Someone shared a secure Note with you!')
+					->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
+					->send();
+			}
+			$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
 		}
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$newPass->setUser($this->userRepository->findOneByAccount($account));
-		$newPass->setExpiration(new \DateTime($expiration));
-		if($callable == NULL) {
-			$newPass->setCallable($callableOptions[0]);
-		} else {
-			$newPass->setCallable($callableOptions[$callable]);
-		}
-		$newPass->setId(uniqid());
-		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
-		$newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
-		$newPass->setCreationDate(new \DateTime("now"));
-		$this->passRepository->add($newPass);
-		if ($newPass->getSendEmail() === "yes") {
-			$mail = new \TYPO3\SwiftMailer\Message();
-			$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
-				->setTo(array($newPass->getEmail() => ''))
-				->setSubject('Someone shared a secure Note with you!')
-				->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
-				->send();
-		}
-		$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
 	}
 }
