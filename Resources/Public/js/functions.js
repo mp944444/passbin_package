@@ -34,7 +34,7 @@ $(document).ready(function() {
 });
 
 var verifyCallback = function() {
-    $("#loginbtn, #registerbtn").removeClass('hide');
+    $("#loginbtn, #registerbtn, #resetpw").removeClass('hide');
 };
 var onloadCallback = function() {
     grecaptcha.render("captcha", {
