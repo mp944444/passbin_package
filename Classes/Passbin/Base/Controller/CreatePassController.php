@@ -125,19 +125,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	* @param string $callable
 	*/
 	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
-		$captcha = $_POST['g-recaptcha-response'];
-		$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le0Sf8SAAAAAN8K5IbEmosTGwdPCYHn_zE9ykqc&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
-		$check = strpos($response, "true");
 
-		if($check == false) {
-			$this->addFlashMessage("Please check the captcha first", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-			$this->redirect("new", "CreatePass", NULL, array(
-				"headline" => $newPass->getHeadline(),
-				"expiration" => $expiration,
-				"callable" => $callable,
-				"email" => $newPass->getEmail()
-			));
-		} else {
 			$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 			if($expiration == "") {
 				$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
@@ -175,6 +163,5 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					->send();
 			}
 			$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
-		}
 	}
 }
