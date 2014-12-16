@@ -8,6 +8,7 @@ namespace Passbin\Base\Controller;
 
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Security\Account;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
@@ -40,6 +41,18 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
 	 */
 	protected $authenticationManager;
+
+	/**
+	 * @var \TYPO3\Flow\Security\Context
+	 * @Flow\Inject
+	 */
+	protected $securityContext;
+
+	/**
+	 * @var \Passbin\Base\Domain\Service\AccountService
+	 * @FLow\Inject
+	 */
+	protected $accountService;
 
 	/**
 	 * @return void
@@ -100,4 +113,88 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->redirect("start", "User");
 			}
 		}
+
+	/**
+	 * @return void
+	 */
+	public function resetPwAction() {
+	/*	$account = NULL;
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach($tokens as $token) {
+			/** @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface $token */
+		/*	if($token->isAuthenticated()) {
+				$account = $this->accountService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
+			}
+		}
+
+		if($account instanceof \TYPO3\Flow\Security\Account) {
+			$this->accountService->resetPassword($account, "aabbcc");
+		}*/
+	}
+
+	/**
+	 * @param string $username
+	 * @return void
+	 */
+	public function sendResetMailAction($username = "") {
+		/** @var  \TYPO3\Flow\Security\Account $account
+		 * @var User $user */
+		$account = $this->accountService->getAccount($username);
+		$user = $this->userRepository->findOneByAccount($account);
+
+		$resetid = uniqid();
+		$user->setResetid($resetid);
+		$this->userRepository->update($user);
+
+		$mail = new \TYPO3\SwiftMailer\Message();
+		$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
+			->setTo(array($user->getEmail() => ''))
+			->setSubject("Password reset")
+			->setBody('If you want to reset your pw please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
+			->send();
+
+
+		;
+		$this->addFlashMessage("An Email to your Account has been sent");
+		$this->redirect("start", "User");
+	}
+
+	/**
+	 * @param string $id
+	 * @return void
+	 */
+	public function newPasswordAction($id) {
+		/** @var User $user
+		 *  @var Account $account
+		 */
+		$user = $this->userRepository->findOneByResetid($id);
+
+		$this->view->assignMultiple(array(
+			"user" => "da",
+			"id" => $id
+		));
+	}
+
+	/**
+	 * @param string $username
+	 * @param string $password
+	 * @param string $id
+	 * @return void
+	 */
+	public function changePasswordAction($username, $password, $id) {
+		/** @var User $user */
+		$account = $this->accountService->getAccount($username);
+		$user = $this->userRepository->findOneByAccount($account);
+
+		if($user->getResetid() == $id) {
+			$this->accountService->resetPassword($account,$password);
+			$user->setResetid("");
+			$this->userRepository->update($user);
+		}
+
+		$this->addFlashMessage("Your Password has been changed");
+		$this->redirect("start", "User");
+	}
+
 }
