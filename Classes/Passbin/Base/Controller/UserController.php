@@ -74,17 +74,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password) {
-	$captcha = $_POST['g-recaptcha-response'];
-	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le0Sf8SAAAAAN8K5IbEmosTGwdPCYHn_zE9ykqc&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
-	$check = strpos($response, "true");
-
-		if($check == false) {
-			$this->addFlashMessage("Please check the captcha first", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-			$this->redirect("register", "User", NULL, array(
-				"firstname" => $firstname,
-				"lastname" => $lastname
-			));
-		} else if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
+		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 				$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
