@@ -25,3 +25,13 @@ $(document).ready(function() {
 
     $('.findErrors').find('.hasError').parent().parent().addClass('has-error');
 });
+
+var verifyCallback = function() {
+    $("#loginbtn, #registerbtn").removeClass('hide');
+};
+var onloadCallback = function() {
+    grecaptcha.render("captcha", {
+        'sitekey':  '6Le0Sf8SAAAAAMXFrjit-ATcHLtJaLA1sku-5BdG',
+        'callback': verifyCallback
+    });
+};

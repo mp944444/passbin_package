@@ -52,3 +52,7 @@ footer p {
 #loginbtn, #registerbtn {
     margin-top: 15px;
 }
+
+.hide {
+    display: none;
+}
