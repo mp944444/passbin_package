@@ -179,13 +179,14 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$account = $this->accountService->getAccount($username);
 		$user = $this->userRepository->findOneByAccount($account);
 
-		if($user->getResetid() == $id) {
+		if($user != NULL && $user->getResetid() == $id) {
 			$this->accountService->resetPassword($account,$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
+			$this->addFlashMessage("Your Password has been changed");
+		} else {
+			$this->addFlashMessage("There was an Error", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
-
-		$this->addFlashMessage("Your Password has been changed");
 		$this->redirect("start", "User");
 	}
 
