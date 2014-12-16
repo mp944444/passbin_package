@@ -22,6 +22,12 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $userRepository;
 
 	/**
+	 * @var \TYPO3\Flow\Security\Context
+	 * @Flow\Inject
+	 */
+	protected $securityContext;
+
+	/**
 	 * @return void
 	 */
 	public function logoutAction() {
