@@ -171,7 +171,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 					->setTo(array($newPass->getEmail() => ''))
 					->setSubject($name.' shared a secure Note with you!')
-					->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' You can encrypt this note '.$newPass->getCallable().' time(s) until: '.$newPass->getExpiration()->format("Y-m-d H:i"))
+					->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' /// You can encrypt this note '.$newPass->getCallable().' time(s) until: '.$newPass->getExpiration()->format("Y-m-d H:i")." /// Please use the following password to encrypt: ".\Passbin\Base\Domain\Service\CryptionService::decryptData($newPass->getPassword()))
 					->send();
 			}
 			$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
