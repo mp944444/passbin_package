@@ -34,14 +34,12 @@ class AccountService {
 		return $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, "DefaultProvider");
 	}
 
-
 	/**
 	 * @param string $identifier
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	protected function getAccountByIdentifierOrAuthenticationProviderName($identifier) {
 		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, "DefaultProvider");
-
 		if ($account === NULL) {
 			return FALSE;
 		}
