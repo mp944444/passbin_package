@@ -146,8 +146,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			->setBody('If you want to reset your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
 			->send();
 
-
-		;
 		$this->addFlashMessage("An Email to your Account has been sent");
 		$this->redirect("start", "User");
 	}
