@@ -82,27 +82,32 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @param string $firstname
+	 * @param string $email
 	 * @param string $lastname
 	 * @param string $username
 	 * @param string $password
 	 */
-	public function createAccountAction($firstname, $lastname, $username, $password) {
+	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
 		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
 				$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
-					"lastname" => $lastname
+					"lastname" => $lastname,
+					"email" => $email
 				));
 			} else if($firstname == "" || $lastname == ""){
 				$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname,
-					"username" => $username
+					"username" => $username,
+					"email" => $email
 				));
 			} else {
 				$user = new User();
 				$user->setLastLogin(new \DateTime(date("Y-m-d H:i:s")));
+				$user->setEmail($email);
+				$user->setResetid("");
 				$user->setFirstname($firstname);
 				$user->setLastname($lastname);
 				$account = $this->accountFactory->createAccountWithPassword($username, $password);
@@ -118,19 +123,6 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function resetPwAction() {
-	/*	$account = NULL;
-		$tokens = $this->securityContext->getAuthenticationTokens();
-
-		foreach($tokens as $token) {
-			/** @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface $token */
-		/*	if($token->isAuthenticated()) {
-				$account = $this->accountService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
-			}
-		}
-
-		if($account instanceof \TYPO3\Flow\Security\Account) {
-			$this->accountService->resetPassword($account, "aabbcc");
-		}*/
 	}
 
 	/**
