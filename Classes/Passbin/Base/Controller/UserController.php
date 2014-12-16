@@ -133,10 +133,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		/** @var  \TYPO3\Flow\Security\Account $account
 		 * @var User $user */
 
-		if($username == "") {
+		if($username == "" || $this->accountService->getAccount($username) == NULL) {
 			$this->addFlashMessage("Please enter your username", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
 		}
+
 		$account = $this->accountService->getAccount($username);
 		$user = $this->userRepository->findOneByAccount($account);
 
@@ -189,10 +190,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$user->setResetid("");
 			$this->userRepository->update($user);
 			$this->addFlashMessage("Your Password has been changed");
+			$this->redirect("start", "User");
 		} else {
 			$this->addFlashMessage("Please fill all fields", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->redirect("newPassword", "User", NULL, array(
+				"id" => $id
+			));
 		}
-		$this->redirect("start", "User");
 	}
-
 }
