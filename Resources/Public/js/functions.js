@@ -24,6 +24,13 @@ $(document).ready(function() {
     });
 
     $('.findErrors').find('.hasError').parent().parent().addClass('has-error');
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 });
 
 var verifyCallback = function() {
