@@ -163,11 +163,15 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$newPass->setCreationDate(new \DateTime("now"));
 			$this->passRepository->add($newPass);
 			if ($newPass->getSendEmail() === "yes") {
+				$name = "Someone";
+				if($newPass->getUser() != NULL) {
+					$name = $newPass->getUser()->getFirstname().' '.$newPass->getUser()->getLastname();
+				}
 				$mail = new \TYPO3\SwiftMailer\Message();
 				$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 					->setTo(array($newPass->getEmail() => ''))
-					->setSubject('Someone shared a secure Note with you!')
-					->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId())
+					->setSubject($name.' shared a secure Note with you!')
+					->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' You can encrypt this note '.$newPass->getCallable().' time(s) until: '.$newPass->getExpiration()->format("Y-m-d H:i"))
 					->send();
 			}
 			$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
