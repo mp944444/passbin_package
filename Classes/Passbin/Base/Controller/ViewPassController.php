@@ -66,7 +66,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		*/
 		$pass = $this->passRepository->findById($passId)->getFirst();
 		if ($pass !== NULL) {
-			if ($pass->getPassword() == $password) {
+			if (\Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getPassword()) == $password) {
 				if($pass->getCallable() == 1) {
 					$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure());
 					$pass->setPassword("");
