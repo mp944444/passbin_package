@@ -142,8 +142,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 			->setTo(array($user->getEmail() => ''))
-			->setSubject("Password reset")
-			->setBody('If you want to reset your pw please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
+			->setSubject("Password reset for ".$username)
+			->setBody('If you want to reset your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
 			->send();
 
 
@@ -157,13 +157,15 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function newPasswordAction($id) {
-		/** @var User $user
-		 *  @var Account $account
-		 */
+		/** @var User $user */
 		$user = $this->userRepository->findOneByResetid($id);
 
+		if($user === NULL){
+			$this->addFlashMessage("invalid id", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->redirect("start", "User");
+		}
+
 		$this->view->assignMultiple(array(
-			"user" => "da",
 			"id" => $id
 		));
 	}
