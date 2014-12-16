@@ -132,6 +132,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function sendResetMailAction($username = "") {
 		/** @var  \TYPO3\Flow\Security\Account $account
 		 * @var User $user */
+
+		if($username == "") {
+			$this->addFlashMessage("Please enter your username", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->redirect("resetpw", "User");
+		}
 		$account = $this->accountService->getAccount($username);
 		$user = $this->userRepository->findOneByAccount($account);
 
