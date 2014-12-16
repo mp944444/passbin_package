@@ -41,6 +41,16 @@ class User {
 	protected $lastLogin;
 
 	/**
+	 * @var string
+	 */
+	protected $email;
+
+	/**
+	 * @var string
+	 */
+	protected $resetid;
+
+	/**
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	public function getAccount()
@@ -128,5 +138,37 @@ class User {
 	public function setLastLogin($lastLogin)
 	{
 		$this->lastLogin = $lastLogin;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
+	/**
+	 * @param string $email
+	 */
+	public function setEmail($email)
+	{
+		$this->email = $email;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResetid()
+	{
+		return $this->resetid;
+	}
+
+	/**
+	 * @param string $resetid
+	 */
+	public function setResetid($resetid)
+	{
+		$this->resetid = $resetid;
 	}
 }
