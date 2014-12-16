@@ -151,7 +151,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			->setBody('If you want to reset your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
 			->send();
 
-		$this->addFlashMessage("An Email to your Account has been sent");
+		$this->addFlashMessage("An Email with instructions has been sent");
 		$this->redirect("start", "User");
 	}
 
@@ -184,13 +184,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$account = $this->accountService->getAccount($username);
 		$user = $this->userRepository->findOneByAccount($account);
 
-		if($user != NULL && $user->getResetid() == $id) {
+		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
 			$this->accountService->resetPassword($account,$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
 			$this->addFlashMessage("Your Password has been changed");
 		} else {
-			$this->addFlashMessage("There was an Error", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Please fill all fields", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		$this->redirect("start", "User");
 	}
