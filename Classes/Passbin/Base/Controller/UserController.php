@@ -123,6 +123,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function resetPwAction() {
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("start", "User");
+		}
 	}
 
 	/**
