@@ -158,6 +158,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			}
 			$newPass->setId(uniqid());
 			$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
+			$newPass->setPassword(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getPassword()));
 			$newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
 			$newPass->setCreationDate(new \DateTime("now"));
 			$this->passRepository->add($newPass);
