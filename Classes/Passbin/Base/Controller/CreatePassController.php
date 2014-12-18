@@ -72,8 +72,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 *
-	 * @todo umbennen in listNotes
+	 * @todo entrys in entries
 	 * @return void
 	 */
 	public function listNotesAction() {
@@ -121,13 +120,12 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
-		// Check expiration date
-		// @todo \DateTime nutzen
 		if($expiration == "") {
-			$expiration = date('Y-m-d H:i:s', strtotime('1 hour'));
+			$expiration = new \DateTime('+1 hour');
+
 		} else {
-			$expiration = date('Y-m-d H:i:s', strtotime($expiration));
-			if($expiration <= date('Y-m-d H:i:s')) {
+			$expiration = new \DateTime($expiration);
+			if($expiration <= new\DateTime('now')) {
 				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
@@ -135,7 +133,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$newPass->setUser($this->userRepository->findOneByAccount($account));
-		$newPass->setExpiration(new \DateTime($expiration));
+		$newPass->setExpiration($expiration);
 		if($callable == NULL) {
 			$newPass->setCallable($callableOptions[0]);
 		} else {
