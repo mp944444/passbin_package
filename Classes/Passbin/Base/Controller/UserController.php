@@ -87,36 +87,38 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
-		if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
-				$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-				$this->redirect("register", "User", NULL, array(
-					"firstname" => $firstname,
-					"lastname" => $lastname,
-					"email" => $email
-				));
-			} else if($firstname == "" || $lastname == ""){
-				$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
-				$this->redirect("register", "User", NULL, array(
-					"firstname" => $firstname,
-					"lastname" => $lastname,
-					"username" => $username,
-					"email" => $email
-				));
-			} else {
-				$user = new User();
-				$user->setLastLogin(new \DateTime(date("Y-m-d H:i:s")));
-				$user->setEmail($email);
-				$user->setResetid("");
-				$user->setFirstname($firstname);
-				$user->setLastname($lastname);
-				$account = $this->accountFactory->createAccountWithPassword($username, $password);
-				$user->setAccount($account);
-				$this->userRepository->add($user);
-				$this->accountRepository->add($account);
-				$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-				$this->redirect("start", "User");
-			}
+		if($firstname = "" || $lastname == "") {
+			$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("register", "User", NULL, array(
+				"firstname" => $firstname,
+				"lastname" => $lastname,
+				"username" => $username,
+				"email" => $email
+			));
+		} else if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
+			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("register", "User", NULL, array(
+				"firstname" => $firstname,
+				"lastname" => $lastname,
+				"email" => $email
+			));
+		} else {
+			$account = $this->accountFactory->createAccountWithPassword($username, $password);
+
+			$user = new User();
+			$user->setLastLogin(new \DateTime('now'));
+			$user->setEmail($email);
+			$user->setResetid("");
+			$user->setFirstname($firstname);
+			$user->setLastname($lastname);
+			$user->setAccount($account);
+			$this->userRepository->add($user);
+			$this->accountRepository->add($account);
+
+			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+			$this->redirect("start", "User");
 		}
+	}
 
 	/**
 	 * @return void
@@ -149,7 +151,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			->setSubject("Password reset for ".$username)
 			->setBody('If you want to reset your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
 			->send();
-		$this->addFlashMessage("An Email with instructions has been sent");
+		$this->addFlashMessage("An Email with further instructions has been sent");
 		$this->redirect("start", "User");
 	}
 
@@ -161,7 +163,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		/** @var User $user */
 		$user = $this->userRepository->findOneByResetid($id);
 		if($user === NULL){
-			$this->addFlashMessage("invalid id", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Invalid id", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 		$this->view->assignMultiple(array(
@@ -177,6 +179,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function changePasswordAction($username, $password, $id) {
 		/** @var User $user */
+		// @todo auslagern in accountservice -> getActiveUser, auch an den anderen Stellen benutzen
 		$account = $this->accountService->getAccount($username);
 		$user = $this->userRepository->findOneByAccount($account);
 		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
