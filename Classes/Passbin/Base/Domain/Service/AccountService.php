@@ -33,6 +33,12 @@ class AccountService {
 	protected $userRepository;
 
 	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+	/**
 	 * @param string $identifier
 	 * @return \TYPO3\Flow\Security\Account
 	 */
@@ -69,6 +75,11 @@ class AccountService {
 	 */
 	public function getActiveUser($username) {
 		$account = $this->getAccount($username);
+		return $this->userRepository->findOneByAccount($account);
+	}
+
+	public function getActiveAuthenticatedUser() {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		return $this->userRepository->findOneByAccount($account);
 	}
 }

@@ -28,6 +28,12 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $securityContext;
 
 	/**
+	 * @var \Passbin\Base\Domain\Service\AccountService
+	 * @FLow\Inject
+	 */
+	protected $accountService;
+
+	/**
 	 * @return void
 	 */
 	public function logoutAction() {
@@ -51,8 +57,7 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		if($check === true) {
 			/** @var User $user */
-			$account = $this->authenticationManager->getSecurityContext()->getAccount();
-			$user = $this->userRepository->findOneByAccount($account);
+			$user = $this->accountService->getActiveAuthenticatedUser();
 			$user->setLastLogin(new \DateTime('now'));
 			$this->userRepository->update($user);
 			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);

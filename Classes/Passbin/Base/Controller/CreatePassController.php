@@ -43,6 +43,12 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	protected $configurationManager;
 
+	/**
+	 * @var \Passbin\Base\Domain\Service\AccountService
+	 * @FLow\Inject
+	 */
+	protected $accountService;
+
     /**
 	 * @param string $headline
 	 * @param int $callable
@@ -70,9 +76,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("new", "CreatePass");
 		}
 		/** @var User $user */
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $this->userRepository->findOneByAccount($account);
-
+		$user = $this->accountService->getActiveAuthenticatedUser();
 		$this->view->assignMultiple(array(
 			"entries" => $user->getActiveEntries(),
 			"expired" => $user->getExpiredEntries()
@@ -112,8 +116,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			}
 		}
 
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$newPass->setUser($this->userRepository->findOneByAccount($account));
+		$newPass->setUser($this->accountService->getActiveAuthenticatedUser());
 		$newPass->setExpiration($expiration);
 		if($callable == NULL) {
 			$newPass->setCallable($callableOptions[0]);
