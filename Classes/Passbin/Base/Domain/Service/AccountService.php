@@ -27,6 +27,12 @@ class AccountService {
 	protected $hashService;
 
 	/**
+	 * @var \Passbin\Base\Domain\Repository\UserRepository
+	 * @Flow\Inject
+	 */
+	protected $userRepository;
+
+	/**
 	 * @param string $identifier
 	 * @return \TYPO3\Flow\Security\Account
 	 */
@@ -36,10 +42,11 @@ class AccountService {
 
 	/**
 	 * @param string $identifier
+	 * @param string $provider
 	 * @return \TYPO3\Flow\Security\Account
 	 */
-	protected function getAccountByIdentifierOrAuthenticationProviderName($identifier) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, "DefaultProvider");
+	protected function getAccountByIdentifierOrAuthenticationProviderName($identifier, $provider = "DefaultProvider") {
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, $provider);
 		if ($account === NULL) {
 			return FALSE;
 		}
@@ -47,6 +54,7 @@ class AccountService {
 	}
 
 	/**
+	 * @todo umbenennen in setPassword
 	 * @param Account $account
 	 * @param $password
 	 * @param string $passwordHashingStrategy
@@ -54,5 +62,13 @@ class AccountService {
 	public function resetPassword(Account $account, $password, $passwordHashingStrategy = 'default') {
 		$account->setCredentialsSource($this->hashService->hashPassword($password, $passwordHashingStrategy));
 		$this->accountRepository->update($account);
+	}
+
+	/**
+	 * @param string $username
+	 */
+	public function getActiveUser($username) {
+		$account = $this->getAccount($username);
+		return $this->userRepository->findOneByAccount($account);
 	}
 }

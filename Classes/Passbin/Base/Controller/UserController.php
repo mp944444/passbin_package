@@ -66,16 +66,18 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $username
 	 * @param string $firstname
 	 * @param string $lastname
+	 * @param string $email
 	 * @return void
 	 */
-	public function registerAction($username = "", $firstname = "", $lastname = "") {
+	public function registerAction($username = "", $firstname = "", $lastname = "", $email = "") {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("new", "createPass");
 		}
 		$this->view->assignMultiple(array(
 			"username" => $username,
 			"firstname" => $firstname,
-			"lastname" => $lastname
+			"lastname" => $lastname,
+			"email" => $email
 		));
 	}
 
@@ -87,7 +89,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
-		if($firstname = "" || $lastname == "") {
+		//@todo firstname value aufeinmal auf "1" gesetzt
+		if($firstname = "" || $lastname == "" || $email == "" || $username == "" || $password == "") {
 			$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
@@ -140,8 +143,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Please enter your username", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
 		}
-		$account = $this->accountService->getAccount($username);
-		$user = $this->userRepository->findOneByAccount($account);
+		$user = $this->accountService->getActiveUser($username);
 		$resetid = uniqid();
 		$user->setResetid($resetid);
 		$this->userRepository->update($user);
@@ -179,11 +181,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function changePasswordAction($username, $password, $id) {
 		/** @var User $user */
-		// @todo auslagern in accountservice -> getActiveUser, auch an den anderen Stellen benutzen
-		$account = $this->accountService->getAccount($username);
-		$user = $this->userRepository->findOneByAccount($account);
+		$user = $this->accountService->getActiveUser($username);
 		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
-			$this->accountService->resetPassword($account,$password);
+			$this->accountService->resetPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
 			$this->addFlashMessage("Your Password has been changed");
