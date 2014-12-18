@@ -99,6 +99,29 @@ class User {
 	}
 
 	/**
+	 * @return \Doctrine\Common\Collections\Collection|static
+	 */
+	public function getExpiredEntries() {
+		return $this->passEntrys->filter(
+			function(Pass $pass) {
+				if($pass->isValid($pass)==false)
+				return true;
+			}
+		);
+	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\Collection|static
+	 */
+	public function getActiveEntries() {
+		return $this->passEntrys->filter(
+			function(Pass $pass) {
+				return $pass->isValid($pass);
+			}
+		);
+	}
+
+	/**
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public function getPassEntrys()

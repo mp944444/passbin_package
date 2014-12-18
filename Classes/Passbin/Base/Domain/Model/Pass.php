@@ -15,6 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Pass {
 
     /**
+     * @var \Passbin\Base\Domain\Repository\PassRepository
+     * @Flow\Inject
+     */
+    protected $passRepository;
+
+    /**
      * id
      * @var string
      */
@@ -264,4 +270,20 @@ class Pass {
 	{
 		$this->user = $user;
 	}
+
+    /**
+     * @param Pass $pass
+     * @return boolean
+     */
+    public function isValid($pass) {
+        if($pass->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") || $pass->getCallable() == 0) {
+            $pass->setPassword("");
+            $pass->setSecure("");
+            $this->passRepository->update($pass);
+            return false;
+        } else if($pass->getExpiration()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") && $pass->getCallable() > 0){
+            return true;
+        }
+            return false;
+    }
 }
