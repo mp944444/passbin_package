@@ -8,7 +8,6 @@ namespace Passbin\Base\Controller;
 
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Security\Account;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
