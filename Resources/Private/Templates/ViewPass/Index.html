@@ -1,9 +1,13 @@
 <f:layout name="Default" />
 <f:section name="Title">Unlock Password (id:{passId})</f:section>
 <f:section name="Content">
-    <f:if condition="{login} == 0">
-         <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
-    </f:if>
+    <f:security.ifAuthenticated>
+        <f:then>
+        </f:then>
+        <f:else>
+            <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
+        </f:else>
+    </f:security.ifAuthenticated>
     <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
     <f:if condition="{found}">
     <f:then>

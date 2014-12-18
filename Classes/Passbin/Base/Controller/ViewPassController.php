@@ -42,12 +42,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
-			$login = 0;
-			if($this->authenticationManager->isAuthenticated()) {
-				$login = 1;
-			}
 			$this->view->assignMultiple(array(
-				"login" => $login,
 				"passId" => $pass->getId(),
 				"found" => true
 			));
@@ -79,12 +74,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					$pass->setCallable($pass->getCallable()-1);
 				}
 				$this->passRepository->update($pass);
-				$login = 0;
-				if($this->authenticationManager->isAuthenticated()) {
-					$login = 1;
-				}
 				$this->view->assignMultiple(array(
-					"login" => $login,
 					"encrypted" => $encrypted,
 					"pass" => $pass
 				));

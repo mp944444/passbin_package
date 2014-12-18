@@ -44,7 +44,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	protected $configurationManager;
 
     /**
-	 * @todo loginstatus auf true/false nicht 0/1
 	 * @param string $headline
 	 * @param int $callable
 	 * @param string $expiration
@@ -52,21 +51,12 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      * @return void
      */
     public function newAction($headline = "", $callable = 0, $expiration = "", $email = "") {
-		// @todo ifAuthenticatedViewHelper nutzen
-		if($this->authenticationManager->isAuthenticated()) {
-			$loginStatus = 0;
-		} else {
-			$loginStatus = 1;
-		}
-
-
 		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assignMultiple(array(
 			"headline" => $headline,
 			"expiration" => $expiration,
 			"callable" => $callable,
 			"email" => $email,
-			"login" => $loginStatus,
 			"callableOptions" => $callableOptions
 		));
 	}
@@ -95,15 +85,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	*/
     public function generateLinkAction($passId) {
 		$link = $this->request->getHttpRequest()->getBaseUri()."id/".$passId;
-
-		// @todo ifAuthenticatedViewHelper nutzen
-		$login = 0;
-		if($this->authenticationManager->isAuthenticated()) {
-			$login = 1;
-		}
 		$this->view->assignMultiple(array(
 			"link" => $link,
-			"login" => $login
 		));
 	}
 
