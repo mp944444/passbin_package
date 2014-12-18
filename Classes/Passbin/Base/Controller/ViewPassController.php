@@ -31,7 +31,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		 * @var \Passbin\Base\Domain\Model\Pass $pass
 		 */
 		$pass = $this->passRepository->findById($id)->getFirst();
-		if ($pass !== NULL) {
+		if ($pass !== NULL && $pass->getCallable() > 0) {
 			$expiration = $pass->getExpiration();
 			if(date('Y-m-d H:i:s') > $expiration->format("Y-m-d H:i:s")) {
 				$pass->setSecure("");
