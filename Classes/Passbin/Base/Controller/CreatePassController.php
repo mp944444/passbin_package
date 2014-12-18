@@ -72,7 +72,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 * @todo entrys in entries
 	 * @return void
 	 */
 	public function listNotesAction() {
@@ -85,7 +84,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$user = $this->userRepository->findOneByAccount($account);
 
 		$this->view->assignMultiple(array(
-			"entrys" => $user->getActiveEntries(),
+			"entries" => $user->getActiveEntries(),
 			"expired" => $user->getExpiredEntries()
 		));
 	}
@@ -122,7 +121,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		if($expiration == "") {
 			$expiration = new \DateTime('+1 hour');
-
 		} else {
 			$expiration = new \DateTime($expiration);
 			if($expiration <= new\DateTime('now')) {

@@ -19,9 +19,9 @@
                 <div><b>Callable</b></div>
                 <div><b>Link</b></div>
             </div>
-            <f:if condition="{entrys}">
+            <f:if condition="{entries}">
                 <f:then>
-                    <f:for each="{entrys}" as="entry">
+                    <f:for each="{entries}" as="entry">
                         <div class="noterow">
                             <div>{entry.headline}</div>
                             <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
