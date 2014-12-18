@@ -14,4 +14,17 @@ use TYPO3\Flow\Persistence\Repository;
  */
 class UserRepository extends Repository {
 
+	/**
+	 * @param string $lastLogin
+	 * @return array
+	 */
+	public function findInactiveUsers($lastLogin) {
+		$date = new \DateTime($lastLogin);
+
+		$query = $this->createQuery();
+		$query->matching(
+			$query->lessThan("lastLogin", $date)
+		);
+		return $query->execute();
+	}
 }

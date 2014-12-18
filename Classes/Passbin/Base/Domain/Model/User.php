@@ -148,22 +148,6 @@ class User {
 	}
 
 	/**
-	 * @return \DateTime
-	 */
-	public function getLastLogin()
-	{
-		return $this->lastLogin;
-	}
-
-	/**
-	 * @param \DateTime $lastLogin
-	 */
-	public function setLastLogin($lastLogin)
-	{
-		$this->lastLogin = $lastLogin;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getEmail()
@@ -193,5 +177,21 @@ class User {
 	public function setResetid($resetid)
 	{
 		$this->resetid = $resetid;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getLastLogin()
+	{
+		return $this->lastLogin;
+	}
+
+	/**
+	 * @param \DateTime $lastLogin
+	 */
+	public function setLastLogin($lastLogin)
+	{
+		$this->lastLogin = $lastLogin;
 	}
 }

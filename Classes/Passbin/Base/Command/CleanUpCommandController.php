@@ -16,6 +16,19 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $passRepository;
 
 	/**
+	 * @var \Passbin\Base\Domain\Repository\UserRepository
+	 * @Flow\Inject
+	 */
+	protected $userRepository;
+
+	/**
+	 * @var \TYPO3\Flow\Security\AccountRepository
+	 * @Flow\Inject
+	 */
+	protected $accountRepository;
+
+
+	/**
 	 * Delete old notes
 	 *
 	 * @param string $date all previous entries will be deleted >2014-12-18<
@@ -24,7 +37,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param bool $nonUserNotes delete notes from unregistered users? TRUE/FALSE
 	 */
 	public function deleteOldNotesCommand($date, $mustExpired = TRUE, $userNotes = FALSE, $nonUserNotes = TRUE) {
-
+		$count = 0;
 		if($userNotes == FALSE && $nonUserNotes == FALSE) {
 			$entries = NULL;
 			$this->outputLine("userNotes and nonUserNotes can be not FALSE");
@@ -39,12 +52,34 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 		foreach($entries as $entry) {
 			/** @var Pass $entry */
 			if($mustExpired && $entry->getExpiration() < new \DateTime('now') && $entry->getCreationDate() < new \DateTime($date)) {
-				$this->outputLine($entry->getHeadline());
 				$this->passRepository->remove($entry);
 			} else if($mustExpired == FALSE && $entry->getCreationDate() < new \DateTime($date)) {
-				$this->outputLine($entry->getHeadline());
 				$this->passRepository->remove($entry);
 			}
+			$count++;
 		}
+
+		$this->outputLine("There were ".$count." notes deleted");
+	}
+
+	/**
+	 * Delete inactive Users
+	 *
+	 * @param string $lastLogin all users who have not logged in after this date will be deleted
+	 */
+	public function deleteInactiveUserCommand($lastLogin) {
+		$count = 0;
+		$users = $this->userRepository->findInactiveUsers($lastLogin);
+
+		foreach($users as $user) {
+			/** @var \Passbin\Base\Domain\Model\User $user
+			 * @var \TYPO3\Flow\Security\Account $account
+			 */
+			$this->userRepository->remove($user);
+			$this->accountRepository->remove($user->getAccount());
+			$count++;
+		}
+
+		$this->outputLine("There where ".$count." user deleted");
 	}
 }
