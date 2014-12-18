@@ -90,7 +90,15 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
 		//@todo firstname value aufeinmal auf "1" gesetzt
-		if($firstname = "" || $lastname == "" || $email == "" || $username == "" || $password == "") {
+		if(strlen($password) < 5) {
+			$this->addFlashMessage("Password minimum length are 5 characters", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->redirect("register", "User", NULL, array(
+				"firstname" => $firstname,
+				"lastname" => $lastname,
+				"username" => $username,
+				"email" => $email
+			));
+		} else if($firstname = "" || $lastname == "" || $email == "" || $username == "") {
 			$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
