@@ -31,7 +31,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	/**
 	 * Delete old notes
 	 *
-	 * @param string $date all previous entries will be deleted >2014-12-18<
+	 * @param string $date all entries which are created before this date will be deleted
 	 * @param bool $mustExpired must entry be expired? TRUE/FALSE
 	 * @param bool $userNotes delete notes from registered users? TRUE/FALSE
 	 * @param bool $nonUserNotes delete notes from unregistered users? TRUE/FALSE
@@ -53,13 +53,14 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			/** @var Pass $entry */
 			if($mustExpired && $entry->getExpiration() < new \DateTime('now') && $entry->getCreationDate() < new \DateTime($date)) {
 				$this->passRepository->remove($entry);
+				$count++;
 			} else if($mustExpired == FALSE && $entry->getCreationDate() < new \DateTime($date)) {
 				$this->passRepository->remove($entry);
+				$count++;
 			}
-			$count++;
 		}
 
-		$this->outputLine("There were ".$count." notes deleted");
+		$this->outputLine("There were ".$count." note(s) deleted");
 	}
 
 	/**
@@ -77,9 +78,13 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			 */
 			$this->userRepository->remove($user);
 			$this->accountRepository->remove($user->getAccount());
+
+			$entries = $this->passRepository->findAllByUser($user);
+			foreach($entries as $entry) {
+				$this->passRepository->remove($entry);
+			}
 			$count++;
 		}
-
 		$this->outputLine("There where ".$count." user deleted");
 	}
 }
