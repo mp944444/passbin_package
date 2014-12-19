@@ -70,6 +70,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	public function deleteInactiveUserCommand($lastLogin) {
 		$count = 0;
+		$entrycount = 0;
 		$users = $this->userRepository->findInactiveUsers($lastLogin);
 
 		foreach($users as $user) {
@@ -82,9 +83,10 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$entries = $this->passRepository->findAllByUser($user);
 			foreach($entries as $entry) {
 				$this->passRepository->remove($entry);
+				$entrycount++;
 			}
 			$count++;
 		}
-		$this->outputLine("There where ".$count." user deleted");
+		$this->outputLine("There where ".$count." users and ".$entrycount." notes deleted");
 	}
 }
