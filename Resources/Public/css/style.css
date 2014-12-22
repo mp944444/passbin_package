@@ -28,6 +28,11 @@ footer p {
     width: 60px;
 }
 
+.noterow div input {
+    height: 22px;
+    font-size: 14px;
+}
+
 .expirednoterow div {
     position: relative;
     width: 175px;
@@ -61,3 +66,4 @@ footer p {
 .hide {
     display: none;
 }
+
