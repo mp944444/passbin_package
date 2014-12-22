@@ -8,6 +8,7 @@ namespace Passbin\Base\Controller;
 
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Error\Message;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
@@ -113,6 +114,19 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else {
+			$emailValidator = new \TYPO3\Flow\Validation\Validator\EmailAddressValidator();
+			$emailvalid = $emailValidator->validate($email);
+			$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
+			$notemptyvalid = $notEmptyValidator->validate($email);
+			if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
+				$this->addFlashMessage("E-Mail is not valid", "", Message::SEVERITY_ERROR);
+				$this->redirect("register", "User", NULL, array(
+					"firstname" => $firstname,
+					"lastname" => $lastname,
+					"username" => $username
+				));
+			}
+
 			$account = $this->accountFactory->createAccountWithPassword($username, $password);
 
 			$user = new User();
@@ -125,6 +139,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->userRepository->add($user);
 			$this->accountRepository->add($account);
 
+			$mail = new \TYPO3\SwiftMailer\Message();
+			$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
+				 ->setTo(array($user->getEmail() => ''))
+				 ->setSubject("Welcome to Passbin")
+				 ->setBody('Welcome to Passbin. Now you can create your own notes and manage them.')
+				 ->send();
 			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("start", "User");
 		}
