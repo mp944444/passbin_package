@@ -114,6 +114,16 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else {
+			$user = $this->userRepository->findOneByEmail($email);
+			if($user != NULL) {
+				$this->addFlashMessage("Account with this email exists", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->redirect("register", "User", NULL, array(
+					"firstname" => $firstname,
+					"lastname" => $lastname,
+					"username" => $username
+				));
+			}
+
 			$emailValidator = new \TYPO3\Flow\Validation\Validator\EmailAddressValidator();
 			$emailvalid = $emailValidator->validate($email);
 			$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
