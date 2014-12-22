@@ -185,11 +185,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("resetpw", "User");
 		}
 		$user = $this->accountService->getActiveUser($username);
-		//$resetid = uniqid();
 		$date = explode('-', date('H-i-s-m-d-Y'));
 		$resetid = mktime($date[0],$date[1],$date[2],$date[3],$date[4],$date[5]);
-
-		//echo '<br>'.date("Y-m-d H:i:s", $test);
 		$user->setResetid($resetid);
 		$this->userRepository->update($user);
 		$mail = new \TYPO3\SwiftMailer\Message();
