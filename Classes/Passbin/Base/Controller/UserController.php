@@ -182,14 +182,18 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("resetpw", "User");
 		}
 		$user = $this->accountService->getActiveUser($username);
-		$resetid = uniqid();
+		//$resetid = uniqid();
+		$date = explode('-', date('H-i-s-m-d-Y'));
+		$resetid = mktime($date[0],$date[1],$date[2],$date[3],$date[4],$date[5]);
+
+		//echo '<br>'.date("Y-m-d H:i:s", $test);
 		$user->setResetid($resetid);
 		$this->userRepository->update($user);
 		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 			->setTo(array($user->getEmail() => ''))
 			->setSubject("Password reset for ".$username)
-			->setBody('If you want to reset your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid)
+			->setBody('If you want to change your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid.'. If you do not ordered a password change do nothing. The link will expire automatically in 1 hour.')
 			->send();
 		$this->addFlashMessage("An Email with further instructions has been sent");
 		$this->redirect("start", "User");
@@ -202,6 +206,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function newPasswordAction($id) {
 		/** @var User $user */
 		$user = $this->userRepository->findOneByResetid($id);
+		$iddate = new \DateTime(date("Y-m-d H:i:s", $user->getResetid()));
+		$actualdate = new \DateTime('-1 hour');
+
+		if($actualdate > $iddate) {
+			$this->addFlashMessage("Your reset link is expired", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->redirect("start", "User");
+		}
 		if($user === NULL){
 			$this->addFlashMessage("Invalid id", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
