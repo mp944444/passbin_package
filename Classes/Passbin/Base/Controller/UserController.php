@@ -248,7 +248,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Your Password has been changed");
 			$this->redirect("start", "User");
 		} else {
-			$this->addFlashMessage("Please fill all fields", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Please fill all fields correctly", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("newPassword", "User", NULL, array(
 				"id" => $id
 			));
