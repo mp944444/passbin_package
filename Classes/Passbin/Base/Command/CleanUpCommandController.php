@@ -67,8 +67,9 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * Delete inactive Users
 	 *
 	 * @param string $lastLogin all users who have not logged in after this date will be deleted
+	 * @param boolean $activatedAccounts Acitvated accounts will be deleted too
 	 */
-	public function deleteInactiveUserCommand($lastLogin) {
+	public function deleteInactiveUserCommand($lastLogin, $activatedAccounts = FALSE) {
 		$count = 0;
 		$entrycount = 0;
 		$users = $this->userRepository->findInactiveUsers($lastLogin);
@@ -77,15 +78,27 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			/** @var \Passbin\Base\Domain\Model\User $user
 			 * @var \TYPO3\Flow\Security\Account $account
 			 */
-			$this->userRepository->remove($user);
-			$this->accountRepository->remove($user->getAccount());
+			if($user->isActivated() && $activatedAccounts) {
+				$this->userRepository->remove($user);
+				$this->accountRepository->remove($user->getAccount());
 
-			$entries = $this->passRepository->findAllByUser($user);
-			foreach($entries as $entry) {
-				$this->passRepository->remove($entry);
-				$entrycount++;
+				$entries = $this->passRepository->findAllByUser($user);
+				foreach($entries as $entry) {
+					$this->passRepository->remove($entry);
+					$entrycount++;
+				}
+				$count++;
+			} else if(!$user->isActivated()) {
+				$this->userRepository->remove($user);
+				$this->accountRepository->remove($user->getAccount());
+
+				$entries = $this->passRepository->findAllByUser($user);
+				foreach($entries as $entry) {
+					$this->passRepository->remove($entry);
+					$entrycount++;
+				}
+				$count++;
 			}
-			$count++;
 		}
 		$this->outputLine("There where ".$count." users and ".$entrycount." notes deleted");
 	}
