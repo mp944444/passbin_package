@@ -112,7 +112,12 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$expiration = new \DateTime($expiration);
 			if($expiration <= new\DateTime('now')) {
 				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
-				$this->redirect("new", "CreatePass");
+				$this->redirect("new", "CreatePass", NULL, array(
+					"headline" => $newPass->getHeadline(),
+					"callable" => $newPass->getCallable(),
+					"sendEmail" => $newPass->getSendEmail(),
+					"email" => $newPass->getEmail()
+				));
 			}
 		}
 

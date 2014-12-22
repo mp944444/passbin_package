@@ -12,6 +12,7 @@ $(document).ready(function() {
 
     if($('#email').val() != "") {
         $('#email').parent().parent().slideDown();
+        $('#sendEmail').prop('checked', true);
     }
 
     $('#sendEmail').change(function() {
