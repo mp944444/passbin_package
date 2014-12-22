@@ -211,7 +211,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
 		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
-			$this->accountService->resetPassword($this->accountService->getAccount($username),$password);
+			$this->accountService->setPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
 			$this->addFlashMessage("Your Password has been changed");

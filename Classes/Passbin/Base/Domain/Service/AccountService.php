@@ -60,12 +60,11 @@ class AccountService {
 	}
 
 	/**
-	 * @todo umbenennen in setPassword
 	 * @param Account $account
 	 * @param $password
 	 * @param string $passwordHashingStrategy
 	 */
-	public function resetPassword(Account $account, $password, $passwordHashingStrategy = 'default') {
+	public function setPassword(Account $account, $password, $passwordHashingStrategy = 'default') {
 		$account->setCredentialsSource($this->hashService->hashPassword($password, $passwordHashingStrategy));
 		$this->accountRepository->update($account);
 	}
