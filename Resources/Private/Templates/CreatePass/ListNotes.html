@@ -63,6 +63,7 @@
                     <div><b>Creation Date</b></div>
                     <div><b>Expiration</b></div>
                     <div><b>Callable</b></div>
+                    <div><b></b></div>
                 </div>
                 <f:if condition="{expired}">
                     <f:then>
@@ -71,7 +72,8 @@
                                 <div>{entry.headline}</div>
                                 <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
                                 <div><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></div>
-                                <div>0</div>
+                                <div>{entry.callable}</div>
+                                <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
                             </div>
                         </f:for>
                     </f:then>

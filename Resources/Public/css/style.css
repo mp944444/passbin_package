@@ -35,8 +35,13 @@ footer p {
 
 .expirednoterow div {
     position: relative;
-    width: 175px;
+    width: 160px;
     display: inline-table;
+}
+
+.expirednoterow div:last-of-type {
+    padding-left: 30px;
+    width: 40px;
 }
 
 #callable, input{
