@@ -177,6 +177,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function sendResetMailAction($username = "") {
 		/** @var  \TYPO3\Flow\Security\Account $account
 		 * @var User $user */
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("start", "User");
+		}
 		if($username == "" || $this->accountService->getAccount($username) == NULL) {
 			$this->addFlashMessage("Please enter your username", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
@@ -205,6 +208,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function newPasswordAction($id) {
 		/** @var User $user */
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("start", "User");
+		}
 		$user = $this->userRepository->findOneByResetid($id);
 		$iddate = new \DateTime(date("Y-m-d H:i:s", $user->getResetid()));
 		$actualdate = new \DateTime('-1 hour');
@@ -229,6 +235,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function changePasswordAction($username, $password, $id) {
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("start", "User");
+		}
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
 		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
@@ -249,6 +258,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $username
 	 */
 	public function activateAccountAction($username) {
+		if($this->authenticationManager->isAuthenticated()) {
+			$this->redirect("start", "User");
+		}
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
 		if($user->isActivated()) {
