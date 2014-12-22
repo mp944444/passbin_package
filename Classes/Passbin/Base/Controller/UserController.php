@@ -212,6 +212,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("start", "User");
 		}
 		$user = $this->userRepository->findOneByResetid($id);
+		if($user == NULL) {
+			$this->addFlashMessage("Invalid link", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->redirect("start", "User");
+		}
 		$iddate = new \DateTime(date("Y-m-d H:i:s", $user->getResetid()));
 		$actualdate = new \DateTime('-1 hour');
 
