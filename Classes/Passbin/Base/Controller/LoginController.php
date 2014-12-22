@@ -7,6 +7,7 @@ namespace Passbin\Base\Controller;
  *                                                                        */
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Error\Message;
 
 class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	/**
@@ -58,10 +59,16 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if($check === true) {
 			/** @var User $user */
 			$user = $this->accountService->getActiveAuthenticatedUser();
-			$user->setLastLogin(new \DateTime('now'));
-			$this->userRepository->update($user);
-			$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
-			$this->redirect("new", "CreatePass");
+			if($user->isActivated()) {
+				$user->setLastLogin(new \DateTime('now'));
+				$this->userRepository->update($user);
+				$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+				$this->redirect("new", "CreatePass");
+			} else {
+				$this->authenticationManager->logout();
+				$this->addFlashMessage("Please first activate your Account.", "", Message::SEVERITY_ERROR);
+				$this->redirect("start", "User");
+			}
 		} else {
 			$this->redirect("start", "User");
 		}

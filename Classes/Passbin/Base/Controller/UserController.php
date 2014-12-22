@@ -135,6 +135,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$user->setResetid("");
 			$user->setFirstname($firstname);
 			$user->setLastname($lastname);
+			$user->setActivated(false);
 			$user->setAccount($account);
 			$this->userRepository->add($user);
 			$this->accountRepository->add($account);
@@ -143,7 +144,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
 				 ->setTo(array($user->getEmail() => ''))
 				 ->setSubject("Welcome to Passbin")
-				 ->setBody('Welcome to Passbin. Now you can create your own notes and manage them.')
+				 ->setBody('Welcome to Passbin. Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
 				 ->send();
 			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("start", "User");
@@ -221,5 +222,21 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"id" => $id
 			));
 		}
+	}
+
+	/**
+	 * @param string $username
+	 */
+	public function activateAccountAction($username) {
+		/** @var User $user */
+		$user = $this->accountService->getActiveUser($username);
+		if($user->isActivated()) {
+			$this->addFlashMessage("User is already active! You can login", "", Message::SEVERITY_NOTICE);
+		} else {
+			$this->addFlashMessage("User has been activated You can now login");
+			$user->setActivated(true);
+			$this->userRepository->update($user);
+		}
+		$this->redirect("start", "User");
 	}
 }

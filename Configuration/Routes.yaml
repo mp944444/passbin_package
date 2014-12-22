@@ -21,3 +21,11 @@
     '@package': 'Passbin.Base'
     '@controller': 'User'
     '@action': 'newPassword'
+
+-
+  name: 'Activate'
+  uriPattern: 'activate/{username}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'User'
+    '@action': 'activateAccount'

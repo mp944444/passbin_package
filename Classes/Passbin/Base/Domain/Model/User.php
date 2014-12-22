@@ -51,6 +51,11 @@ class User {
 	protected $resetid;
 
 	/**
+	 * @var boolean
+	 */
+	protected $activated;
+
+	/**
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	public function getAccount()
@@ -193,5 +198,21 @@ class User {
 	public function setLastLogin($lastLogin)
 	{
 		$this->lastLogin = $lastLogin;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isActivated()
+	{
+		return $this->activated;
+	}
+
+	/**
+	 * @param boolean $activated
+	 */
+	public function setActivated($activated)
+	{
+		$this->activated = $activated;
 	}
 }
