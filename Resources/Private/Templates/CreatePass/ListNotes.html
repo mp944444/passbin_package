@@ -18,6 +18,7 @@
                 <div><b>Expiration</b></div>
                 <div><b>Callable</b></div>
                 <div><b>Link</b></div>
+                <div><b></b></div>
             </div>
             <f:if condition="{entries}">
                 <f:then>
@@ -37,6 +38,7 @@
                                 </f:if>
                             </div>
                             <div><f:form.textfield name="link" id="link" class="form-control" value="http://passbin.vm/id/{entry.id}"/></div>
+                            <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
                         </div>
                     </f:for>
                 </f:then>

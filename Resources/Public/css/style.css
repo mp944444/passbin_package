@@ -19,8 +19,13 @@ footer p {
 
 .noterow div {
     position: relative;
-    width: 135px;
+    width: 125px;
     display: inline-table;
+}
+
+.noterow div:last-of-type {
+    padding-left: 30px;
+    width: 60px;
 }
 
 .expirednoterow div {

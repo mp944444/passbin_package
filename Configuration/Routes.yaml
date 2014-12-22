@@ -23,9 +23,17 @@
     '@action': 'newPassword'
 
 -
-  name: 'Activate'
+  name: 'ActivateAccount'
   uriPattern: 'activate/{username}'
   defaults:
     '@package': 'Passbin.Base'
     '@controller': 'User'
     '@action': 'activateAccount'
+
+-
+  name: 'deleteNote'
+  uriPattern: 'deletenote/{id}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'ViewPass'
+    '@action': 'deleteNote'
