@@ -49,17 +49,21 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$entries = $this->passRepository->findAll();
 		}
 
-		foreach($entries as $entry) {
-			/** @var Pass $entry */
-			if($mustExpired && $entry->getExpiration() < new \DateTime('now') && $entry->getCreationDate() < new \DateTime($date)) {
-				$this->passRepository->remove($entry);
-				$count++;
-			} else if($mustExpired == FALSE && $entry->getCreationDate() < new \DateTime($date)) {
-				$this->passRepository->remove($entry);
-				$count++;
+		if($entries != NULL) {
+			foreach($entries as $entry) {
+				/** @var Pass $entry */
+				if($mustExpired && $entry->getExpiration() < new \DateTime('now') && $entry->getCreationDate() < new \DateTime($date)) {
+					$this->passRepository->remove($entry);
+					$count++;
+				} else if($mustExpired == FALSE && $entry->getCreationDate() < new \DateTime($date)) {
+					$this->passRepository->remove($entry);
+					$count++;
+				} else if($mustExpired && $entry->getCallable() == 0) {
+					$this->passRepository->remove($entry);
+					$count++;
+				}
 			}
 		}
-
 		$this->outputLine("There were ".$count." note(s) deleted");
 	}
 
