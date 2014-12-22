@@ -90,8 +90,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $password
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
-		if(strlen($password) < 5) {
-			$this->addFlashMessage("Password minimum length are 5 characters", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+		if(strlen($password) < 8) {
+			$this->addFlashMessage("Password minimum length are 8 characters", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
