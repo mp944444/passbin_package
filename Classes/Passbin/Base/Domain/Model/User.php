@@ -104,7 +104,7 @@ class User {
 	public function getExpiredEntries() {
 		return $this->passEntrys->filter(
 			function(Pass $pass) {
-				if($pass->isValid($pass)==false)
+				if($pass->isValid()==false)
 				return true;
 			}
 		);
@@ -116,7 +116,7 @@ class User {
 	public function getActiveEntries() {
 		return $this->passEntrys->filter(
 			function(Pass $pass) {
-				return $pass->isValid($pass);
+				return $pass->isValid();
 			}
 		);
 	}

@@ -31,15 +31,9 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		 * @var \Passbin\Base\Domain\Model\Pass $pass
 		 */
 		$pass = $this->passRepository->findById($id)->getFirst();
-		if ($pass !== NULL && $pass->getCallable() > 0) {
-			$expiration = $pass->getExpiration();
-			// @todo isValid nutzen
-			if(date('Y-m-d H:i:s') > $expiration->format("Y-m-d H:i:s")) {
-				$pass->setSecure("");
-				$pass->setPassword("");
-				$this->passRepository->update($pass);
-				$this->persistenceManager->persistAll();
-				$this->addFlashMessage("Note does not exist", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+		if ($pass !== NULL) {
+			if(!$pass->isValid()) {
+				$this->addFlashMessage("Note does not exist or is no longer valid", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
 			$this->view->assignMultiple(array(

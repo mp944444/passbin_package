@@ -102,6 +102,7 @@ class Pass {
         return $this->creator;
     }
 
+
     /**
      * @param string $creator
      */
@@ -109,6 +110,7 @@ class Pass {
     {
         $this->creator = $creator;
     }
+
 
     /**
      * @return mixed
@@ -272,18 +274,28 @@ class Pass {
 	}
 
     /**
-     * @param Pass $pass
-     * @return boolean
+     * @return bool
      */
-    public function isValid($pass) {
-        if($pass->getExpiration()->format("Y-m-d H:i:s") < date("Y-m-d H:i:s") || $pass->getCallable() == 0) {
-            $pass->setPassword("");
-            $pass->setSecure("");
-            $this->passRepository->update($pass);
-            return false;
-        } else if($pass->getExpiration()->format("Y-m-d H:i:s") > date("Y-m-d H:i:s") && $pass->getCallable() > 0){
-            return true;
+    public function isValid() {
+        $valid = true;
+
+        if($this->callable <= 0)
+            $valid = false;
+
+        if($this->getExpiration() == NULL)
+            $valid = false;
+
+        $now = new \DateTime('now');
+        if($this->getExpiration() <= $now)
+            $valid = false;
+
+        // If is not valid reset password and secure
+        if(!$valid) {
+            $this->setPassword(NULL);
+            $this->setSecure(NULL);
+            $this->passRepository->update($this);
         }
-            return false;
+
+        return $valid;
     }
 }
