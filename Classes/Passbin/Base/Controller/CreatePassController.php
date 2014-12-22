@@ -72,7 +72,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function listNotesAction() {
 		if(!$this->authenticationManager->isAuthenticated()) {
-			$this->addFlashMessage("Please login to view your notes !", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Please login to view your notes!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("new", "CreatePass");
 		}
 		/** @var User $user */
@@ -111,7 +111,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		} else {
 			$expiration = new \DateTime($expiration);
 			if($expiration <= new\DateTime('now')) {
-				$this->addFlashMessage("Expiration Date is expired", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Expiration Date is expired", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass", NULL, array(
 					"headline" => $newPass->getHeadline(),
 					"callable" => $newPass->getCallable(),

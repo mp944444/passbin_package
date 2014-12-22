@@ -91,7 +91,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email) {
 		if(strlen($password) < 8) {
-			$this->addFlashMessage("Password minimum length are 8 characters", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Password minimum length are 8 characters!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -99,7 +99,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else if($firstname == "" || $lastname == "" || $email == "" || $username == "") {
-			$this->addFlashMessage("Please fill all fields", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Please fill all fields!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -107,7 +107,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
-			$this->addFlashMessage("Name is not available", "Warning!", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Name is not available!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -116,7 +116,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		} else {
 			$user = $this->userRepository->findOneByEmail($email);
 			if($user != NULL) {
-				$this->addFlashMessage("Account with this email exists", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Account with this email exists!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname,
@@ -129,7 +129,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
 			$notemptyvalid = $notEmptyValidator->validate($email);
 			if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
-				$this->addFlashMessage("E-Mail is not valid", "", Message::SEVERITY_ERROR);
+				$this->addFlashMessage("E-Mail is not valid!", "", Message::SEVERITY_ERROR);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname,
@@ -181,7 +181,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("start", "User");
 		}
 		if($username == "" || $this->accountService->getAccount($username) == NULL) {
-			$this->addFlashMessage("Please enter your username", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Please enter your username!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
 		}
 		$user = $this->accountService->getActiveUser($username);
@@ -195,7 +195,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			->setSubject("Password reset for ".$username)
 			->setBody('If you want to change your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid.'. If you do not ordered a password change do nothing. The link will expire automatically in 1 hour.')
 			->send();
-		$this->addFlashMessage("An Email with further instructions has been sent");
+		$this->addFlashMessage("An Email with further instructions has been sent!");
 		$this->redirect("start", "User");
 	}
 
@@ -210,18 +210,18 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		$user = $this->userRepository->findOneByResetid($id);
 		if($user == NULL) {
-			$this->addFlashMessage("Invalid link", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Invalid link!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 		$iddate = new \DateTime(date("Y-m-d H:i:s", $user->getResetid()));
 		$actualdate = new \DateTime('-1 hour');
 
 		if($actualdate > $iddate) {
-			$this->addFlashMessage("Your reset link is expired", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Your reset link is expired!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 		if($user === NULL){
-			$this->addFlashMessage("Invalid id", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Invalid id!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 		$this->view->assignMultiple(array(
@@ -245,10 +245,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->accountService->setPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
-			$this->addFlashMessage("Your Password has been changed");
+			$this->addFlashMessage("Your Password has been changed!");
 			$this->redirect("start", "User");
 		} else {
-			$this->addFlashMessage("Please fill all fields correctly", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Please fill all fields correctly!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("newPassword", "User", NULL, array(
 				"id" => $id
 			));
@@ -265,9 +265,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
 		if($user->isActivated()) {
-			$this->addFlashMessage("User is already active! You can login", "", Message::SEVERITY_NOTICE);
+			$this->addFlashMessage("User is already active! You can login!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 		} else {
-			$this->addFlashMessage("User has been activated You can now login");
+			$this->addFlashMessage("User has been activated. You can now login!");
 			$user->setActivated(true);
 			$this->userRepository->update($user);
 		}

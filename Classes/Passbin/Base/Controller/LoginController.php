@@ -62,11 +62,11 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			if($user->isActivated()) {
 				$user->setLastLogin(new \DateTime('now'));
 				$this->userRepository->update($user);
-				$this->addFlashMessage("Successfully logged in", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+				$this->addFlashMessage("Successfully logged in!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 				$this->redirect("new", "CreatePass");
 			} else {
 				$this->authenticationManager->logout();
-				$this->addFlashMessage("Please first activate your Account.", "", Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Please first activate your Account!", "", Message::SEVERITY_ERROR);
 				$this->redirect("start", "User");
 			}
 		} else {

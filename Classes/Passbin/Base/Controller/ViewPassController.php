@@ -42,7 +42,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$pass = $this->passRepository->findById($id)->getFirst();
 		if ($pass !== NULL) {
 			if(!$pass->isValid()) {
-				$this->addFlashMessage("Note does not exist or is no longer valid", "Error!", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Note does not exist or is no longer valid!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass");
 			}
 			$this->view->assignMultiple(array(
@@ -71,7 +71,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					$pass->setPassword("");
 					$pass->setSecure("");
 					$pass->setCallable(0);
-					$this->addFlashMessage("The note has been removed now. Please save it elsewhere.", "Notice!", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
+					$this->addFlashMessage("The note has been removed now. Please save it elsewhere!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 				} else {
 					$encrypted = \Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getSecure());
 					$pass->setCallable($pass->getCallable()-1);
@@ -82,11 +82,11 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 					"pass" => $pass
 				));
             } else {
-                $this->addFlashMessage('Wrong Password', 'password', \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+                $this->addFlashMessage('Wrong Password!', '', \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
                 $this->redirectToRequest($this->request->getReferringRequest());
             }
         } else {
-            $this->addFlashMessage("The note is not there anymore.");
+            $this->addFlashMessage("The note is not there anymore!");
             $this->redirect("new", "CreatePass");
         }
     }
@@ -106,7 +106,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$pass = $this->passRepository->findOneById($id);
 
 			if($pass === NULL) {
-				$this->addFlashMessage("The Note does not exist", "", Message::SEVERITY_ERROR);
+				$this->addFlashMessage("The Note does not exist!", "", Message::SEVERITY_ERROR);
 				$this->redirect("listNotes", "CreatePass");
 			}
 			$noteOwner = $pass->getUser();
@@ -119,7 +119,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->redirect("listNotes", "CreatePass");
 			}
 
-			$this->addFlashMessage("Note has been deleted", "", Message::SEVERITY_OK);
+			$this->addFlashMessage("Note has been deleted!", "", Message::SEVERITY_OK);
 			$this->redirect("listNotes", "CreatePass");
 		} else {
 			$this->redirect("start", "User");
