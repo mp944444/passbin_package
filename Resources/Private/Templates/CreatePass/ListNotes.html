@@ -37,7 +37,7 @@
                                     </f:else>
                                 </f:if>
                             </div>
-                            <div><f:form.textfield name="link" id="link" class="form-control" value="http://passbin.vm/id/{entry.id}"/></div>
+                            <div><f:form.textfield name="link" id="link" class="form-control" onclick="this.select()" value="http://passbin.vm/id/{entry.id}"/></div>
                             <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
                         </div>
                     </f:for>
