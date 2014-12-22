@@ -122,7 +122,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Note has been deleted", "", Message::SEVERITY_OK);
 			$this->redirect("listNotes", "CreatePass");
 		} else {
-
+			$this->redirect("start", "User");
 		}
 	}
 }
