@@ -2,6 +2,7 @@
 namespace Passbin\Base\Command;
 
 use Passbin\Base\Domain\Model\Pass;
+use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
 /**
  * Class CleanUpController
@@ -108,7 +109,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * Notes and Users Overview
 	 */
 	public function statisticCommand() {
-		$statistic = array(
+		$passStatistic = array(
 			"Generally" => array(
 				"category" => "Generally",
 				"Notes" => 0,
@@ -129,35 +130,52 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			)
 		);
 
+		$userStatistic = array(
+			"accounts" => 0,
+			"activated" => 0,
+			"non activated" => 0
+		);
 
-		foreach($this->passRepository->findAll() as $pass) {
-			/** @var Pass $pass */
-			$statistic["Generally"]["Notes"] = $statistic["Generally"]["Notes"]+1;
-			if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
-				$statistic["Generally"]["Active Notes"] = $statistic["Generally"]["Active Notes"]+1;
+		foreach($this->userRepository->findAll() as $user) {
+			/** @var User $user */
+			$userStatistic["accounts"] = $userStatistic["accounts"]+1;
+			if($user->isActivated()) {
+				$userStatistic["activated"] = $userStatistic["activated"]+1;
 			} else {
-				$statistic["Generally"]["Expired Notes"] = $statistic["Generally"]["Expired Notes"]+1;
-			}
-
-			if($pass->getUser() != NULL) {
-				$statistic["User statistic"]["Notes"] = $statistic["User statistic"]["Notes"]+1;
-				if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
-					$statistic["User statistic"]["Active Notes"] = $statistic["User statistic"]["Active Notes"]+1;
-				} else {
-					$statistic["User statistic"]["Expired Notes"] = $statistic["User statistic"]["Expired Notes"]+1;
-				}
-			} else {
-					$statistic["Non User statistic"]["Notes"] = $statistic["Non User statistic"]["Notes"]+1;
-					if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
-						$statistic["Non User statistic"]["Active Notes"] = $statistic["Non User statistic"]["Active Notes"]+1;
-					} else {
-						$statistic["Non User statistic"]["Expired Notes"] = $statistic["Non User statistic"]["Expired Notes"]+1;
-					}
+				$userStatistic["non activated"] = $userStatistic["non activated"]+1;
 			}
 		}
 
 
-		foreach($statistic as $stat) {
+		foreach($this->passRepository->findAll() as $pass) {
+			/** @var Pass $pass */
+			$passStatistic["Generally"]["Notes"] = $passStatistic["Generally"]["Notes"]+1;
+			if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+				$passStatistic["Generally"]["Active Notes"] = $passStatistic["Generally"]["Active Notes"]+1;
+			} else {
+				$passStatistic["Generally"]["Expired Notes"] = $passStatistic["Generally"]["Expired Notes"]+1;
+			}
+
+			if($pass->getUser() != NULL) {
+				$passStatistic["User statistic"]["Notes"] = $passStatistic["User statistic"]["Notes"]+1;
+				if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+					$passStatistic["User statistic"]["Active Notes"] = $passStatistic["User statistic"]["Active Notes"]+1;
+				} else {
+					$passStatistic["User statistic"]["Expired Notes"] = $passStatistic["User statistic"]["Expired Notes"]+1;
+				}
+			} else {
+					$passStatistic["Non User statistic"]["Notes"] = $passStatistic["Non User statistic"]["Notes"]+1;
+					if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+						$passStatistic["Non User statistic"]["Active Notes"] = $passStatistic["Non User statistic"]["Active Notes"]+1;
+					} else {
+						$passStatistic["Non User statistic"]["Expired Notes"] = $passStatistic["Non User statistic"]["Expired Notes"]+1;
+					}
+			}
+		}
+
+		$this->outputLine("");
+		$this->outputLine("Pass Statistic");
+		foreach($passStatistic as $stat) {
 			$this->outputLine("");
 			$this->outputLine($stat['category']);
 			$this->outputLine("-------------------------------------------");
@@ -169,5 +187,15 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$this->outputLine(key($stat)."        ".$stat[key($stat)]);
 			$this->outputLine("-------------------------------------------");
 		}
+		$this->outputLine("");
+		$this->outputLine("");
+		$this->outputLine("-------------------------------------------");
+		$this->outputLine("User Statistic");
+		$this->outputLine("-------------------------------------------");
+		$this->outputLine("Accounts             ".$userStatistic["accounts"]);
+		$this->outputLine("Activated            ".$userStatistic["activated"]);
+		$this->outputLine("Non Activated        ".$userStatistic["non activated"]);
+		$this->outputLine("-------------------------------------------");
+		$this->outputLine("");
 	}
 }
