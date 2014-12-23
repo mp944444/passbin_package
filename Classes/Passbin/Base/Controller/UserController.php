@@ -294,4 +294,43 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$this->addFlashMessage("An Email has been sent!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 		$this->redirect("start", "User");
 	}
+
+	/**
+	 * @return void
+	 */
+	public function getUsernameAction() {}
+
+	/**
+	 * @param string $email
+	 * @return void
+	 */
+	public function sentUsernameAction($email = "") {
+		$emailValidator = new \TYPO3\Flow\Validation\Validator\EmailAddressValidator();
+		$emailvalid = $emailValidator->validate($email);
+		$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
+		$notemptyvalid = $notEmptyValidator->validate($email);
+		if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
+			$this->addFlashMessage("This email id not valid");
+			$this->redirect("getUsername", "User");
+		}
+
+		/** @var User $user */
+		$user = $this->userRepository->findOneByEmail($email);
+		if($user != NULL) {
+			$username = $user->getAccount()->getAccountIdentifier();
+
+			$mail = new \TYPO3\SwiftMailer\Message();
+			$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
+				->setTo(array($user->getEmail() => ''))
+				->setSubject("Your username request")
+				->setBody('Your username is '.$username.'.')
+				->send();
+
+			$this->addFlashMessage("An Email with your username has been sent to your email");
+			$this->redirect("start", "User");
+		} else {
+			$this->addFlashMessage("There is no username with the given email", "", Message::SEVERITY_ERROR);
+			$this->redirect("getUsername", "User");
+		}
+	}
 }
