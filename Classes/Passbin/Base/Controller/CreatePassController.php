@@ -123,6 +123,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		$newPass->setUser($this->accountService->getActiveAuthenticatedUser());
 		$newPass->setExpiration($expiration);
+
 		if($callable == NULL) {
 			$newPass->setCallable($callableOptions[0]);
 		} else {

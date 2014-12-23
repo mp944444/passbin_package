@@ -129,6 +129,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$emailvalid = $emailValidator->validate($email);
 			$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
 			$notemptyvalid = $notEmptyValidator->validate($email);
+
 			if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
 				$this->addFlashMessage("E-Mail is not valid!", "", Message::SEVERITY_ERROR);
 				$this->redirect("register", "User", NULL, array(
@@ -157,6 +158,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				 ->setSubject("Welcome to Passbin")
 				 ->setBody('Welcome to Passbin. Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
 				 ->send();
+
 			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("start", "User");
 		}
@@ -185,17 +187,20 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Please enter your username!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
 		}
+
 		$user = $this->accountService->getActiveUser($username);
 		$date = explode('-', date('H-i-s-m-d-Y'));
 		$resetid = mktime($date[0],$date[1],$date[2],$date[3],$date[4],$date[5]);
 		$user->setResetid($resetid);
 		$this->userRepository->update($user);
+
 		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 			->setTo(array($user->getEmail() => ''))
 			->setSubject("Password reset for ".$username)
 			->setBody('If you want to change your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid.'. If you do not ordered a password change do nothing. The link will expire automatically in 1 hour.')
 			->send();
+
 		$this->addFlashMessage("An Email with further instructions has been sent!");
 		$this->redirect("start", "User");
 	}
@@ -209,11 +214,13 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("start", "User");
 		}
+
 		$user = $this->userRepository->findOneByResetid($id);
 		if($user == NULL) {
 			$this->addFlashMessage("Invalid link!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
+
 		$iddate = new \DateTime(date("Y-m-d H:i:s", $user->getResetid()));
 		$actualdate = new \DateTime('-1 hour');
 
@@ -221,10 +228,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->addFlashMessage("Your reset link is expired!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
+
 		if($user === NULL){
 			$this->addFlashMessage("Invalid id!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
+
 		$this->view->assignMultiple(array(
 			"id" => $id
 		));
@@ -240,8 +249,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("start", "User");
 		}
+
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
+
 		if($user != NULL && strlen($password) >= 8 && $user->getResetid() == $id) {
 			$this->accountService->setPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
@@ -263,8 +274,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("start", "User");
 		}
+
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
+
 		if($user->isActivated()) {
 			$this->addFlashMessage("User is already active! You can login!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 		} else {
@@ -272,6 +285,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$user->setActivated(true);
 			$this->userRepository->update($user);
 		}
+
 		$this->redirect("start", "User");
 	}
 
@@ -291,6 +305,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			->setSubject("Your activation Link")
 			->setBody('Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
 			->send();
+
 		$this->addFlashMessage("An Email has been sent!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 		$this->redirect("start", "User");
 	}
@@ -316,6 +331,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		/** @var User $user */
 		$user = $this->userRepository->findOneByEmail($email);
+
 		if($user != NULL) {
 			$username = $user->getAccount()->getAccountIdentifier();
 

@@ -40,6 +40,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		 * @var \Passbin\Base\Domain\Model\Pass $pass
 		 */
 		$pass = $this->passRepository->findById($id)->getFirst();
+
 		if ($pass !== NULL) {
 			if(!$pass->isValid()) {
 				$this->addFlashMessage("Note does not exist or is no longer valid!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
@@ -64,6 +65,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		* @var \Passbin\Base\Domain\Model\Pass $pass
 		*/
 		$pass = $this->passRepository->findById($passId)->getFirst();
+
 		if ($pass !== NULL) {
 			if (\Passbin\Base\Domain\Service\CryptionService::decryptData($pass->getPassword()) == $password) {
 				if($pass->getCallable() == 1) {
@@ -109,6 +111,7 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->addFlashMessage("The Note does not exist!", "", Message::SEVERITY_ERROR);
 				$this->redirect("listNotes", "CreatePass");
 			}
+
 			$noteOwner = $pass->getUser();
 
 			if($user == $noteOwner) {
@@ -118,7 +121,6 @@ class ViewPassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$this->addFlashMessage("You can not delete a Note which is not yours!", "", Message::SEVERITY_ERROR);
 				$this->redirect("listNotes", "CreatePass");
 			}
-
 			$this->addFlashMessage("Note has been deleted!", "", Message::SEVERITY_OK);
 			$this->redirect("listNotes", "CreatePass");
 		} else {

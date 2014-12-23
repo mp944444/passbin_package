@@ -83,8 +83,8 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			if($user->isActivated() && $activatedAccounts) {
 				$this->userRepository->remove($user);
 				$this->accountRepository->remove($user->getAccount());
-
 				$entries = $this->passRepository->findAllByUser($user);
+
 				foreach($entries as $entry) {
 					$this->passRepository->remove($entry);
 					$entrycount++;
@@ -93,8 +93,8 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			} else if(!$user->isActivated()) {
 				$this->userRepository->remove($user);
 				$this->accountRepository->remove($user->getAccount());
-
 				$entries = $this->passRepository->findAllByUser($user);
+
 				foreach($entries as $entry) {
 					$this->passRepository->remove($entry);
 					$entrycount++;
