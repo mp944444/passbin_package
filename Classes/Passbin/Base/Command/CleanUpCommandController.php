@@ -103,4 +103,71 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 		}
 		$this->outputLine("There where ".$count." users and ".$entrycount." notes deleted");
 	}
+
+	/**
+	 * Notes and Users Overview
+	 */
+	public function statisticCommand() {
+		$statistic = array(
+			"Generally" => array(
+				"category" => "Generally",
+				"Notes" => 0,
+				"Active Notes" => 0,
+				"Expired Notes" => 0
+			),
+			"User statistic" => array(
+				"category" => "User statistic",
+				"Notes" => 0,
+				"Active Notes" => 0,
+				"Expired Notes" => 0
+			),
+			"Non User statistic" => array(
+				"category" => "Non User statistic",
+				"Notes" => 0,
+				"Active Notes" => 0,
+				"Expired Notes" => 0
+			)
+		);
+
+
+		foreach($this->passRepository->findAll() as $pass) {
+			/** @var Pass $pass */
+			$statistic["Generally"]["Notes"] = $statistic["Generally"]["Notes"]+1;
+			if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+				$statistic["Generally"]["Active Notes"] = $statistic["Generally"]["Active Notes"]+1;
+			} else {
+				$statistic["Generally"]["Expired Notes"] = $statistic["Generally"]["Expired Notes"]+1;
+			}
+
+			if($pass->getUser() != NULL) {
+				$statistic["User statistic"]["Notes"] = $statistic["User statistic"]["Notes"]+1;
+				if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+					$statistic["User statistic"]["Active Notes"] = $statistic["User statistic"]["Active Notes"]+1;
+				} else {
+					$statistic["User statistic"]["Expired Notes"] = $statistic["User statistic"]["Expired Notes"]+1;
+				}
+			} else {
+					$statistic["Non User statistic"]["Notes"] = $statistic["Non User statistic"]["Notes"]+1;
+					if($pass->getCallable() > 0 && $pass->getExpiration()->format('Y-m-d H:i:s') > date('Y-m-d H:i:s')) {
+						$statistic["Non User statistic"]["Active Notes"] = $statistic["Non User statistic"]["Active Notes"]+1;
+					} else {
+						$statistic["Non User statistic"]["Expired Notes"] = $statistic["Non User statistic"]["Expired Notes"]+1;
+					}
+			}
+		}
+
+
+		foreach($statistic as $stat) {
+			$this->outputLine("");
+			$this->outputLine($stat['category']);
+			$this->outputLine("-------------------------------------------");
+			next($stat);
+			$this->outputLine(key($stat)."                ".$stat[key($stat)]);
+			next($stat);
+			$this->outputLine(key($stat)."         ".$stat[key($stat)]);
+			next($stat);
+			$this->outputLine(key($stat)."        ".$stat[key($stat)]);
+			$this->outputLine("-------------------------------------------");
+		}
+	}
 }
