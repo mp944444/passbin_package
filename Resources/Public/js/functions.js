@@ -3,12 +3,7 @@ $(document).ready(function() {
         $("#usernamereader").val($(this).val());
     });
 
-    $('#register').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#login').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#createnewnote').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#yournotes').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
-
+    $('#register, #login, #createnewnote, #yournotes, #logout').appendTo('ul.nav.navbar-nav.navbar-right');
 
     if($('#email').val() != "") {
         $('#email').parent().parent().slideDown();
