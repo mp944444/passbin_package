@@ -17,6 +17,9 @@
             <h4 class="alert-heading">{flashMessage.title}</h4>
         </f:if>
         {flashMessage}
+        <f:if condition="{flashMessage.code} == 5365">
+            <f:link.action id="sendActivationMail" action="sendActivationMailAgain" controller="User" arguments="{flashMessage.arguments}">Send activation Email to <b>{flashMessage.arguments.username}</b> again</f:link.action>
+        </f:if>
         </div>
     </f:for>
 </f:flashMessages>

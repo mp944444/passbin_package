@@ -274,4 +274,24 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		$this->redirect("start", "User");
 	}
+
+	/**
+	 * @param string $username
+	 * @return void
+	 */
+	public function sendActivationMailAgainAction($username) {
+		/**
+		 * @var User $user
+		 */
+		$user = $this->accountService->getActiveUser($username);
+
+		$mail = new \TYPO3\SwiftMailer\Message();
+		$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
+			->setTo(array($user->getEmail() => ''))
+			->setSubject("Your activation Link")
+			->setBody('Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
+			->send();
+		$this->addFlashMessage("An Email has been sent!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+		$this->redirect("start", "User");
+	}
 }

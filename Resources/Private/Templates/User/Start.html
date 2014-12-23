@@ -6,20 +6,6 @@
         <div class="col-lg-8 col-lg-offset-2">
             <div class="well bs-component">
                 <f:form action="authenticate" controller="Login" enctype="multipart/form-data" class="form-horizontal findErrors" name="login" object="{login}" method="post">
-                    <f:form.validationResults>
-                        <f:if condition="{validationResults.flattenedErrors}">
-                            <div class="alert alert-danger">
-                                <ul class="error">
-                                    <f:for each="{validationResults.flattenedErrors}" as="elementErrors"
-                                           key="elementIdentifier" reverse="true">
-                                        <f:for each="{elementErrors}" as="error">
-                                            <li>{error}</li>
-                                        </f:for>
-                                    </f:for>
-                                </ul>
-                            </div>
-                        </f:if>
-                    </f:form.validationResults>
                     <fieldset>
                         <legend></legend>
                         <div class="form-group">
