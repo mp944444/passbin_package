@@ -1,3 +1,4 @@
+{namespace helper=Passbin\Base\ViewHelpers}
 <f:layout name="Default" />
 <f:section name="Title">Your Notes</f:section>
 <f:section name="Content">
@@ -71,8 +72,26 @@
                             <div class="expirednoterow">
                                 <div>{entry.headline}</div>
                                 <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
-                                <div><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></div>
-                                <div>{entry.callable}</div>
+                                <div>
+                                    <f:if condition="<helper:CheckIfDateIsExpired date='{entry.expiration}'/> == 1">
+                                        <f:then>
+                                            <span class="expired"><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></span>
+                                        </f:then>
+                                        <f:else>
+                                            <f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date>
+                                        </f:else>
+                                    </f:if>
+                                </div>
+                                <div>
+                                    <f:if condition="{entry.callable} == 0">
+                                        <f:then>
+                                            <span class="expired">{entry.callable}</span>
+                                        </f:then>
+                                        <f:else>
+                                            {entry.callable}
+                                        </f:else>
+                                    </f:if>
+                                </div>
                                 <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
                             </div>
                         </f:for>

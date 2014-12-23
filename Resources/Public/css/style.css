@@ -72,3 +72,6 @@ footer p {
     display: none;
 }
 
+.expired {
+    color: #df691a;
+}
