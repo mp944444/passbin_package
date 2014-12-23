@@ -146,7 +146,6 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 			}
 		}
 
-
 		foreach($this->passRepository->findAll() as $pass) {
 			/** @var Pass $pass */
 			$passStatistic["Generally"]["Notes"] = $passStatistic["Generally"]["Notes"]+1;

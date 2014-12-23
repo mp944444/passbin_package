@@ -242,7 +242,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 		/** @var User $user */
 		$user = $this->accountService->getActiveUser($username);
-		if($user != NULL && $password != NULL && $user->getResetid() == $id) {
+		if($user != NULL && strlen($password) >= 8 && $user->getResetid() == $id) {
 			$this->accountService->setPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
