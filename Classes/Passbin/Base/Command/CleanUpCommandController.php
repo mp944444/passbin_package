@@ -90,7 +90,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 					$entrycount++;
 				}
 				$count++;
-			} else if(!$user->isActivated()) {
+			} else if(!$user->isActivated() && !$activatedAccounts) {
 				$this->userRepository->remove($user);
 				$this->accountRepository->remove($user->getAccount());
 				$entries = $this->passRepository->findAllByUser($user);
@@ -102,7 +102,7 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 				$count++;
 			}
 		}
-		$this->outputLine("There where ".$count." users and ".$entrycount." notes deleted");
+		$this->outputLine("There where ".$count." user(s) and ".$entrycount." note(s) deleted");
 	}
 
 	/**
@@ -110,29 +110,29 @@ class CleanUpCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	public function statisticCommand() {
 		$passStatistic = array(
-			"Generally" => array(
-				"category" => "Generally",
-				"Notes" => 0,
-				"Active Notes" => 0,
-				"Expired Notes" => 0
+			"Generally"          => array(
+				"category"       => "Generally",
+				"Notes"          => 0,
+				"Active Notes"   => 0,
+				"Expired Notes"  => 0
 			),
-			"User statistic" => array(
-				"category" => "User statistic",
-				"Notes" => 0,
-				"Active Notes" => 0,
-				"Expired Notes" => 0
+			"User statistic"     => array(
+				"category"       => "User statistic",
+				"Notes"          => 0,
+				"Active Notes"   => 0,
+				"Expired Notes"  => 0
 			),
 			"Non User statistic" => array(
-				"category" => "Non User statistic",
-				"Notes" => 0,
-				"Active Notes" => 0,
-				"Expired Notes" => 0
+				"category"       => "Non User statistic",
+				"Notes"          => 0,
+				"Active Notes"   => 0,
+				"Expired Notes"  => 0
 			)
 		);
 
 		$userStatistic = array(
-			"accounts" => 0,
-			"activated" => 0,
+			"accounts"      => 0,
+			"activated"     => 0,
 			"non activated" => 0
 		);
 
