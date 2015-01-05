@@ -68,6 +68,10 @@ footer p {
     margin-top: 15px;
 }
 
+#login {
+    margin-right: 10px;
+}
+
 .hide {
     display: none;
 }
