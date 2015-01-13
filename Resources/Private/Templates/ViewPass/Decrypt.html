@@ -1,5 +1,5 @@
 <f:layout name="Default" />
-<f:section name="Title">Secure Note</f:section>
+<f:section name="Title">Deine Note</f:section>
 <f:section name="Content">
 <f:security.ifAuthenticated>
     <f:then>
@@ -8,21 +8,21 @@
         <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
     </f:else>
 </f:security.ifAuthenticated>
-<f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+<f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+    <h2>Deine <span class="highlight">Note</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
                 <form class="form-horizontal">
                     <fieldset>
-                        <legend></legend>
                         <div class="form-group">
-                            <label for="headline" class="col-lg-2 control-label">Description</label>
+                            <label for="headline" class="col-lg-2 control-label">Titel</label>
                             <div class="col-lg-10">
                                 <f:form.textfield property="headline" id="headline" class="form-control" value="{pass.headline}" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Secure Note</label>
+                            <label for="secure" class="col-lg-2 control-label">Geheime Nachricht</label>
                             <div class="col-lg-10">
                                 <f:form.textarea property="secure" id="secure" class="form-control" value="{encrypted}"/>
                             </div>
@@ -30,7 +30,9 @@
                     </fieldset>
                 </form>
             </div>
-            <f:link.action action="new" controller="createPass" class="btn btn-primary">Back</f:link.action>
+            <f:security.ifAuthenticated>
+                <f:link.action action="new" controller="createPass" class="btn btn-primary">Zurück</f:link.action>
+            </f:security.ifAuthenticated>
         </div>
     </div>
 </f:section>

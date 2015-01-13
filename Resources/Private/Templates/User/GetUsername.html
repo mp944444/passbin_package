@@ -1,8 +1,9 @@
 <f:layout name="Default" />
-<f:section name="Title">New Password</f:section>
+<f:section name="Title">Neues Passwort</f:section>
 <f:section name="Content">
+    <h2>Neues <span class="highlight">Passwort</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
                 <f:form action="sentUsername" controller="User" class="form-horizontal findErrors" method="post">
                     <f:form.validationResults>
@@ -20,16 +21,15 @@
                         </f:if>
                     </f:form.validationResults>
                     <fieldset>
-                        <legend></legend>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">E-Mail</label>
+                            <label class="col-lg-2 control-label">Email</label>
                             <div class="col-lg-10">
-                                <f:form.textfield name="email" property="uemail" value="" class="form-control" placeholder="E-Mail" errorClass="hasError" />
+                                <f:form.textfield name="email" property="uemail" value="" class="form-control" placeholder="Email" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
-                                <f:form.submit class="btn btn-primary" id="sendUsername" value="Send Email" />
+                                <f:form.submit class="btn btn-primary" id="sendUsername" value="Email senden" />
                             </div>
                         </div>
                     </fieldset>

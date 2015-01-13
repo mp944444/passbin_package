@@ -72,7 +72,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function listNotesAction() {
 		if(!$this->authenticationManager->isAuthenticated()) {
-			$this->addFlashMessage("Please login to view your notes!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Bitte einloggen um Notes anzusehen!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("new", "CreatePass");
 		}
 		/** @var User $user */
@@ -110,8 +110,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$expiration = new \DateTime('+1 hour');
 		} else {
 			$expiration = new \DateTime($expiration);
-			if($expiration <= new\DateTime('now')) {
-				$this->addFlashMessage("Expiration Date is expired", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			if($expiration <= new \DateTime('now')) {
+				$this->addFlashMessage("Verfügbarkeits Datum ist überschritten!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("new", "CreatePass", NULL, array(
 					"headline" => $newPass->getHeadline(),
 					"callable" => $newPass->getCallable(),
@@ -145,8 +145,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$mail = new \TYPO3\SwiftMailer\Message();
 			$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 				->setTo(array($newPass->getEmail() => ''))
-				->setSubject($name.' shared a secure Note with you!')
-				->setBody('New secure Note for you. Here: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' /// You can encrypt this note '.$newPass->getCallable().' time(s) until: '.$newPass->getExpiration()->format("Y-m-d H:i")." /// Please use the following password to encrypt: ".\Passbin\Base\Domain\Service\CryptionService::decryptData($newPass->getPassword()))
+				->setSubject($name.' hat eine geheime Note mit Ihnen geteilt!')
+				->setBody('Neue Note für Sie: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' /// Die Note kann '.$newPass->getCallable().' mal bis zum '.$newPass->getExpiration()->format("Y-m-d H:i")." entschlüsselt werden. /// Bitte folgendes Passwort nutzen: ".\Passbin\Base\Domain\Service\CryptionService::decryptData($newPass->getPassword()))
 				->send();
 		}
 		$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));

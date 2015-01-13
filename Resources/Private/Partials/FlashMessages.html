@@ -18,7 +18,7 @@
         </f:if>
         {flashMessage}
         <f:if condition="{flashMessage.code} == 5365">
-            <br><br><f:link.action id="sendActivationMail" action="sendActivationMailAgain" controller="User" arguments="{flashMessage.arguments}"><b>Send activation Email to "{flashMessage.arguments.username}" again</b></f:link.action>
+            <br><br><f:link.action id="sendActivationMail" action="sendActivationMailAgain" controller="User" arguments="{flashMessage.arguments}"><b>Aktivierungs Email von "{flashMessage.arguments.username}" erneut senden</b></f:link.action>
         </f:if>
         </div>
     </f:for>

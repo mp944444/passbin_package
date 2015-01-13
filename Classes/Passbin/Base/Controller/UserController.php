@@ -92,7 +92,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function createAccountAction($firstname, $lastname, $username, $password, $email, $confirmPassword) {
 		if(strlen($password) < 8 || $password != $confirmPassword) {
-			$this->addFlashMessage("Password did not match!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Passwörter stimmen nicht überein oder ist zu kurz (mindestens 8 Zeichen)!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -100,7 +100,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else if($firstname == "" || $lastname == "" || $email == "" || $username == "") {
-			$this->addFlashMessage("Please fill all fields!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Bitte alle Felder ausfüllen!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -108,7 +108,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				"email" => $email
 			));
 		} else if($this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, "DefaultProvider" )) {
-			$this->addFlashMessage("Name is not available!", "", \TYPO3\Flow\Error\Message::SEVERITY_WARNING);
+			$this->addFlashMessage("Username bereits vergeben!!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("register", "User", NULL, array(
 				"firstname" => $firstname,
 				"lastname" => $lastname,
@@ -117,7 +117,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		} else {
 			$user = $this->userRepository->findOneByEmail($email);
 			if($user != NULL) {
-				$this->addFlashMessage("Account with this email exists!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Ein Account mit der Email Adresse ist bereits registriert!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname,
@@ -131,7 +131,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$notemptyvalid = $notEmptyValidator->validate($email);
 
 			if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
-				$this->addFlashMessage("E-Mail is not valid!", "", Message::SEVERITY_ERROR);
+				$this->addFlashMessage("Email ist nicht gültig!", "", Message::SEVERITY_ERROR);
 				$this->redirect("register", "User", NULL, array(
 					"firstname" => $firstname,
 					"lastname" => $lastname,
@@ -155,11 +155,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$mail = new \TYPO3\SwiftMailer\Message();
 			$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
 				 ->setTo(array($user->getEmail() => ''))
-				 ->setSubject("Welcome to Passbin")
-				 ->setBody('Welcome to Passbin. Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
+				 ->setSubject("Willkommen bei Passbin")
+				 ->setBody('Willkommen bei Passbin. Bitte auf den folgenden Link klicken um den Account zu aktivieren. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
 				 ->send();
 
-			$this->addFlashMessage("Account successfully created!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+			$this->addFlashMessage("Account wurde erstellt! Bitte auf den Link in der Email klicken", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 			$this->redirect("start", "User");
 		}
 	}
@@ -184,7 +184,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->redirect("start", "User");
 		}
 		if($username == "" || $this->accountService->getAccount($username) == NULL) {
-			$this->addFlashMessage("Please enter your username!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Bitte Username eingeben!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("resetpw", "User");
 		}
 
@@ -197,11 +197,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
 			->setTo(array($user->getEmail() => ''))
-			->setSubject("Password reset for ".$username)
-			->setBody('If you want to change your password please click here: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid.'. If you do not ordered a password change do nothing. The link will expire automatically in 1 hour.')
+			->setSubject("Passwort ändern von ".$username)
+			->setBody('Wenn das Passwort geändert werden soll, bitte hier klicken: '.$this->request->getHttpRequest()->getBaseUri().'reset/'.$resetid.'. Wenn keine Passwort Änderung nötig ist bitte diese Email ignorieren. Der Link wird in einer Stunde automatisch ungültig.')
 			->send();
 
-		$this->addFlashMessage("An Email with further instructions has been sent!");
+		$this->addFlashMessage("Eine Email mit weiteren Anweisungen wurde gesendet!");
 		$this->redirect("start", "User");
 	}
 
@@ -217,7 +217,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 		$user = $this->userRepository->findOneByResetid($id);
 		if($user == NULL) {
-			$this->addFlashMessage("Invalid link!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Ungültiger Link!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 
@@ -225,12 +225,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$actualdate = new \DateTime('-1 hour');
 
 		if($actualdate > $iddate) {
-			$this->addFlashMessage("Your reset link is expired!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Der Link ist nicht mehr gültig!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 
 		if($user === NULL){
-			$this->addFlashMessage("Invalid id!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Ungültige Id!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("start", "User");
 		}
 
@@ -257,10 +257,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$this->accountService->setPassword($this->accountService->getAccount($username),$password);
 			$user->setResetid("");
 			$this->userRepository->update($user);
-			$this->addFlashMessage("Your Password has been changed!");
+			$this->addFlashMessage("Das Passwort wurde erfolgreich geändert!");
 			$this->redirect("start", "User");
 		} else {
-			$this->addFlashMessage("Please fill all fields correctly!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Bitte alle Felder vollständig ausfüllen!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 			$this->redirect("newPassword", "User", NULL, array(
 				"id" => $id
 			));
@@ -279,9 +279,9 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$user = $this->accountService->getActiveUser($username);
 
 		if($user->isActivated()) {
-			$this->addFlashMessage("User is already active! You can login!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
+			$this->addFlashMessage("User ist bereits aktiviert!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
 		} else {
-			$this->addFlashMessage("User has been activated. You can now login!");
+			$this->addFlashMessage("User wurde aktiviert!");
 			$user->setActivated(true);
 			$this->userRepository->update($user);
 		}
@@ -302,11 +302,11 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
 			->setTo(array($user->getEmail() => ''))
-			->setSubject("Your activation Link")
-			->setBody('Please click on the following link to activate your account. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
+			->setSubject("Aktivierung")
+			->setBody('Bitte auf den folgenden Link klicken um den Account zu aktivieren. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
 			->send();
 
-		$this->addFlashMessage("An Email has been sent!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+		$this->addFlashMessage("Eine Email wurde gesendet!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 		$this->redirect("start", "User");
 	}
 
@@ -325,7 +325,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		$notEmptyValidator = new \TYPO3\Flow\Validation\Validator\NotEmptyValidator();
 		$notemptyvalid = $notEmptyValidator->validate($email);
 		if ($notemptyvalid->hasErrors() || $emailvalid->hasErrors()) {
-			$this->addFlashMessage("This email id not valid");
+			$this->addFlashMessage("Die Email ist nicht gültig");
 			$this->redirect("getUsername", "User");
 		}
 
@@ -338,14 +338,14 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$mail = new \TYPO3\SwiftMailer\Message();
 			$mail->setFrom(array('noreply@passb.in' => 'Passbin'))
 				->setTo(array($user->getEmail() => ''))
-				->setSubject("Your username request")
-				->setBody('Your username is '.$username.'.')
+				->setSubject("Account bei Passbin")
+				->setBody('Username: '.$username.'.')
 				->send();
 
-			$this->addFlashMessage("An Email with your username has been sent to your email");
+			$this->addFlashMessage("Eine Email mit dem Benutzernamen wurde verschickt!");
 			$this->redirect("start", "User");
 		} else {
-			$this->addFlashMessage("There is no username with the given email", "", Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Es existiert kein Benutzer mit dieser Email", "", Message::SEVERITY_ERROR);
 			$this->redirect("getUsername", "User");
 		}
 	}

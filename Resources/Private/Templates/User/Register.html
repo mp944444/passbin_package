@@ -1,10 +1,11 @@
 <f:layout name="Default" />
-<f:section name="Title">Create Account</f:section>
+<f:section name="Title">Account erstellen</f:section>
 <f:section name="Content">
     <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
-    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+    <h2>Account <span class="highlight">erstellen</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
                 <f:form action="createAccount" class="form-horizontal findErrors" method="post">
                     <f:form.validationResults>
@@ -22,7 +23,6 @@
                         </f:if>
                     </f:form.validationResults>
                     <fieldset>
-                        <legend></legend>
                         <div class="form-group">
                             <label class="col-lg-2 control-label">Username</label>
                             <div class="col-lg-10">
@@ -30,39 +30,39 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Firstname</label>
+                            <label class="col-lg-2 control-label">Vorname</label>
                             <div class="col-lg-10">
-                                <f:form.textfield name="firstname" property="firstname" value="{firstname}" class="form-control" placeholder="Firstname" errorClass="hasError" />
+                                <f:form.textfield name="firstname" property="firstname" value="{firstname}" class="form-control" placeholder="Vorname" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Lastname</label>
+                            <label class="col-lg-2 control-label">Nachname</label>
                             <div class="col-lg-10">
-                                <f:form.textfield name="lastname" property="lastname" value="{lastname}" class="form-control" placeholder="Lastname" errorClass="hasError" />
+                                <f:form.textfield name="lastname" property="lastname" value="{lastname}" class="form-control" placeholder="Nachname" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">E-Mail</label>
+                            <label class="col-lg-2 control-label">Email</label>
                             <div class="col-lg-10">
-                                <f:form.textfield name="email" property="email" value="{email}" class="form-control" placeholder="E-Mail" errorClass="hasError" />
+                                <f:form.textfield name="email" property="email" value="{email}" class="form-control" placeholder="Email" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Password</label>
+                            <label class="col-lg-2 control-label">Passwort</label>
                             <div class="col-lg-10">
-                                <f:form.textfield type="password" property="password" value="" name="password" class="form-control" placeholder="Password" errorClass="hasError" />
+                                <f:form.textfield type="password" property="password" value="" name="password" class="form-control" placeholder="Passwort" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Confirm Password</label>
+                            <label class="col-lg-2 control-label">Passwort wiederholen</label>
                             <div class="col-lg-10">
-                                <f:form.textfield type="password" property="ConfirmPassword" value="" name="confirmPassword" class="form-control" placeholder="Confirm Password" errorClass="hasError" />
+                                <f:form.textfield type="password" property="ConfirmPassword" value="" name="confirmPassword" class="form-control" placeholder="Passwort wiederholen" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
                                 <div id="captcha" class="g-recaptcha" data-sitekey="6Le0Sf8SAAAAAMXFrjit-ATcHLtJaLA1sku-5BdG"></div>
-                                <f:form.submit class="btn btn-primary hide" id="registerbtn" value="Create Account" />
+                                <f:form.submit class="btn btn-primary hide" id="registerbtn" value="Account erstellen" />
                             </div>
                         </div>
                     </fieldset>

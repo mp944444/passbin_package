@@ -1,78 +1,70 @@
 {namespace helper=Passbin\Base\ViewHelpers}
 <f:layout name="Default" />
-<f:section name="Title">Your Notes</f:section>
+<f:section name="Title">Deine Notes</f:section>
 <f:section name="Content">
     <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
-    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+    <h2>Deine <span class="highlight">Notes</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
-            <h4>Active Notes</h4>
+        <div class="col-lg-10 col-lg-offset-1">
+            <h3>Aktive <span class="highlight">Notes</span></h3>
             <legend></legend>
         </div>
     </div>
     <div class="row yournotesrow">
-    <div class="col-lg-8 col-lg-offset-2">
+    <div class="col-lg-10 col-lg-offset-1">
         <div class="well bs-component">
-            <div class="noterow">
-                <div><b>Headline</b></div>
-                <div><b>Creation Date</b></div>
-                <div><b>Expiration</b></div>
-                <div><b>Callable</b></div>
+            <div class="noterow title">
+                <div><b>Titel</b></div>
+                <div><b>Erstellt am</b></div>
+                <div><b>Verfügbar bis</b></div>
+                <div><b>Aufrufbar</b></div>
                 <div><b>Link</b></div>
-                <div><b></b></div>
+                <div><b>Löschen</b></div>
             </div>
             <f:if condition="{entries}">
                 <f:then>
                     <f:for each="{entries}" as="entry">
                         <div class="noterow">
-                            <div>{entry.headline}</div>
-                            <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
-                            <div><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></div>
-                            <div>
-                                <f:if condition="{entry.callable} < 2">
-                                    <f:then>
-                                        {entry.callable} time
-                                    </f:then>
-                                    <f:else>
-                                        {entry.callable} times
-                                    </f:else>
-                                </f:if>
-                            </div>
-                            <div><f:form.textfield name="link" id="link" class="form-control" onclick="this.select()" value="http://passbin.vm/id/{entry.id}"/></div>
-                            <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
+                            <div><span class="smallTitle">Titel:</span> {entry.headline}</div>
+                            <div><span class="smallTitle">Erstellt am:</span> <f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
+                            <div><span class="smallTitle">Verfügbar bis:</span> <f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></div>
+                            <div><span class="smallTitle">Aufrufbar:</span> {entry.callable}x</div>
+                            <div><span class="smallTitle">Link:</span> <f:form.textfield name="link" id="link" class="form-control" onclick="this.select()" value="http://passbin.vm/id/{entry.id}"/></div>
+                            <div><span class="smallTitle">Löschen:</span> <a href="http://passbin.vm/deletenote/{entry.id}" class="deleteNote"><i class="fa fa-times fa-2x"></i></a></div>
                         </div>
                     </f:for>
                 </f:then>
                 <f:else>
-                    <i>No active secure notes</i>
+                    <i class="emptyNotes">Keine aktiven Notes</i>
                 </f:else>
             </f:if>
         </div>
     </div>
        </div>
     <div class="row expiredrow">
-        <div class="col-lg-8 col-lg-offset-2">
-                <h4>Expired Notes</h4>
+        <div class="col-lg-10 col-lg-offset-1">
+                <h3>Abgelaufene <span class="highlight">Notes</span></h3>
             <legend></legend>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
-                <div class="expirednoterow">
-                    <div><b>Headline</b></div>
-                    <div><b>Creation Date</b></div>
-                    <div><b>Expiration</b></div>
-                    <div><b>Callable</b></div>
-                    <div><b></b></div>
+                <div class="expirednoterow title">
+                    <div><b>Titel</b></div>
+                    <div><b>Erstellt am</b></div>
+                    <div><b>Verfügbar bis</b></div>
+                    <div><b>Aufrufbar</b></div>
+                    <div><b>Löschen</b></div>
                 </div>
                 <f:if condition="{expired}">
                     <f:then>
                         <f:for each="{expired}" as="entry">
                             <div class="expirednoterow">
-                                <div>{entry.headline}</div>
-                                <div><f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
-                                <div>
+                                <div><span class="smallTitle">Titel:</span> {entry.headline}</div>
+                                <div><span class="smallTitle">Erstellt am:</span> <f:format.date format="d.m.Y H:i:s">{entry.creationdate}</f:format.date></div>
+                                <div><span class="smallTitle">Verfügbar bis:</span>
                                     <f:if condition="<helper:CheckIfDateIsExpired date='{entry.expiration}'/> == 1">
                                         <f:then>
                                             <span class="expired"><f:format.date format="d.m.Y H:i:s">{entry.expiration}</f:format.date></span>
@@ -82,22 +74,22 @@
                                         </f:else>
                                     </f:if>
                                 </div>
-                                <div>
+                                <div><span class="smallTitle">Aufrufbar:</span>
                                     <f:if condition="{entry.callable} == 0">
                                         <f:then>
                                             <span class="expired">{entry.callable}</span>
                                         </f:then>
                                         <f:else>
-                                            {entry.callable}
+                                            {entry.callable}x
                                         </f:else>
                                     </f:if>
                                 </div>
-                                <div><a href="http://passbin.vm/deletenote/{entry.id}"><i class="fa fa-times fa-2x"></i></a></div>
+                                <div><span class="smallTitle">Löschen:</span> <a href="http://passbin.vm/deletenote/{entry.id}" class="deleteNote"><i class="fa fa-times fa-2x"></i></a></div>
                             </div>
                         </f:for>
                     </f:then>
                     <f:else>
-                        <i>No expired secure notes</i>
+                        <i class="emptyNotes">Keine abgelaufenen Notes</i>
                     </f:else>
                 </f:if>
             </div>

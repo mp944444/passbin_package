@@ -2,8 +2,9 @@
 <f:section name="Title">Login</f:section>
 <f:section name="Content">
     <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Create new Note</f:link.action>
+    <h2>Log<span class="highlight">in</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
                 <f:form action="authenticate" controller="Login" enctype="multipart/form-data" class="form-horizontal findErrors" name="login" object="{login}" method="post">
                     <f:form.validationResults>
@@ -21,7 +22,6 @@
                         </f:if>
                     </f:form.validationResults>
                     <fieldset>
-                        <legend></legend>
                         <div class="form-group">
                             <label class="col-lg-2 control-label">Username</label>
                             <div class="col-lg-10">
@@ -31,9 +31,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label">Password</label>
+                            <label class="col-lg-2 control-label">Passwort</label>
                             <div class="col-lg-10">
-                                <input type="password" class="form-control" placeholder="Password"
+                                <input type="password" class="form-control" placeholder="Passwort"
                                        name="__authentication[TYPO3][Flow][Security][Authentication][Token][UsernamePassword][password]"
                                        value="" tabindex="2"/>
                             </div>
@@ -41,8 +41,8 @@
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
                                 <f:form.submit tabindex="3" class="btn btn-primary" value="Login" />
-                                <f:link.action id="notregistered" action="register" class="btn btn-primary">Create Account</f:link.action>
-                                <f:link.action id="notregistered" action="resetPw" class="btn btn-primary">Password?</f:link.action>
+                                <f:link.action id="notregistered" action="register" class="btn btn-primary">Account erstellen</f:link.action>
+                                <f:link.action id="notregistered" action="resetPw" class="btn btn-primary">Passwort?</f:link.action>
                                 <f:link.action id="notregistered" action="getUsername" class="btn btn-primary">Username?</f:link.action>
                             </div>
                         </div>

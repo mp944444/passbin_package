@@ -1,18 +1,19 @@
 <f:layout name="Default" />
-<f:section name="Title">Create a new Note</f:section>
+<f:section name="Title">Neue Note</f:section>
 <f:section name="Content">
     <f:security.ifAuthenticated>
        <f:then>
-           <f:link.action id="yournotes" action="listNotes" controller="createPass" class="btn btn-primary">Your Notes</f:link.action>
+           <f:link.action id="yournotes" action="listNotes" controller="createPass" class="btn btn-primary">Notes</f:link.action>
            <f:link.action id="logout" action="logout" controller="Login" class="btn btn-primary">Logout</f:link.action>
        </f:then>
        <f:else>
            <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
-           <f:link.action id="register" action="register" controller="User" class="btn btn-primary">Sign up</f:link.action>
+           <f:link.action id="register" action="register" controller="User" class="btn btn-primary">Registrieren</f:link.action>
        </f:else>
     </f:security.ifAuthenticated>
+    <h2>Neue <span class="highlight">Note</span></h2>
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-10 col-lg-offset-1">
             <div class="well bs-component">
                 <f:form action="create" class="form-horizontal findErrors" name="newPass" object="{newPass}" method="POST">
                     <f:form.validationResults>
@@ -30,39 +31,38 @@
                         </f:if>
                     </f:form.validationResults>
                     <fieldset>
-                        <legend></legend>
                         <div class="form-group">
-                            <label for="headline" class="col-lg-2 control-label">Description</label>
+                            <label for="headline" class="col-lg-2 control-label">Titel</label>
                             <div class="col-lg-10">
-                                <f:form.textfield property="headline" value="{headline}" id="headline" class="form-control" placeholder="This is a super secure Password" errorClass="hasError" />
+                                <f:form.textfield property="headline" value="{headline}" id="headline" class="form-control" placeholder="Titel" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Secure Note</label>
+                            <label for="secure" class="col-lg-2 control-label">Geheime Nachricht</label>
                             <div class="col-lg-10">
-                                <f:form.textarea property="secure" id="secure" class="form-control" placeholder="Secure Note" errorClass="hasError" />
+                                <f:form.textarea property="secure" id="secure" class="form-control" placeholder="Geheime Nachricht" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Callable <br>(Default: 1 time)</label>
+                            <label for="secure" class="col-lg-2 control-label">Aufrufbar</label>
                             <div class="col-lg-10">
-                                <f:form.select id="callable" class="form-control" value="{callable}" name="callable" options="{callableOptions}" prependOptionLabel="Please select" prependOptionValue=""/>
+                                <f:form.select id="callable" class="form-control" value="{callable}" name="callable" options="{callableOptions}" prependOptionLabel="Bitte auswählen" prependOptionValue=""/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="secure" class="col-lg-2 control-label">Expiration date (Default: +1 hour)</label>
+                            <label for="secure" class="col-lg-2 control-label">Verfügbar bis</label>
                             <div class="col-lg-10">
                                 <input type="datetime-local" value="{expiration}" name="expiration">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-lg-2 control-label">Password (to unlock)</label>
+                            <label for="password" class="col-lg-2 control-label">Passwort</label>
                             <div class="col-lg-10">
-                                <f:form.password property="password" id="password" class="form-control" placeholder="Password" errorClass="hasError" />
+                                <f:form.password property="password" id="password" class="form-control" placeholder="Passwort" errorClass="hasError" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sendEmail" class="col-lg-2 control-label">Send Email? (with Link and Password)</label>
+                            <label for="sendEmail" class="col-lg-2 control-label">Email senden?</label>
                             <div class="col-lg-10">
                                 <f:form.checkbox id="sendEmail" property="sendEmail" value="yes" errorClass="hasError" />
                             </div>
@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
                                 <div id="captcha" class="g-recaptcha"></div>
-                                <f:form.submit class="btn btn-primary hide" id="loginbtn" value="Create" />
+                                <f:form.submit class="btn btn-primary hide" id="loginbtn" value="Erstellen" />
                             </div>
                         </div>
                     </fieldset>

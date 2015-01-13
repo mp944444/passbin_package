@@ -39,7 +39,7 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function logoutAction() {
 		$this->authenticationManager->logout();
-		$this->addFlashMessage("You've been logged out", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+		$this->addFlashMessage("Erfolgreich abgemeldet", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 		$this->redirect("new", "createPass");
 	}
 
@@ -54,7 +54,7 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 				$check = true;
 			}
 		} catch(\Exception $e){
-			$this->addFlashMessage("Username and / or password is wrong!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+			$this->addFlashMessage("Username und / oder Passwort ist falsch!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
 		}
 		if($check === true) {
 			/** @var User $user */
@@ -62,12 +62,12 @@ class LoginController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			if($user->isActivated()) {
 				$user->setLastLogin(new \DateTime('now'));
 				$this->userRepository->update($user);
-				$this->addFlashMessage("Successfully logged in!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
+				$this->addFlashMessage("Erfolgreich angemeldet!", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
 				$this->redirect("new", "CreatePass");
 			} else {
 				$username = $user->getAccount()->getAccountIdentifier();
 				$this->authenticationManager->logout();
-				$this->addFlashMessage("Please first activate your Account!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR, array("username" => $username), 5365);
+				$this->addFlashMessage("Bitte aktiviere erst Account aktivieren!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR, array("username" => $username), 5365);
 				$this->redirect("start", "User");
 			}
 		} else {
