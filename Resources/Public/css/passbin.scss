@@ -148,6 +148,10 @@ i.emptyNotes {
     position: relative;
     top: -20px;
 
+    &:last-of-type {
+      border-bottom: 0;
+    }
+
     &.title {
       display: none;
     }

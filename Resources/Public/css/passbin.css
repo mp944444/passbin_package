@@ -91,6 +91,8 @@ i.emptyNotes {
     border-bottom: 1px solid #afafaf;
     position: relative;
     top: -20px; }
+    .noterow:last-of-type, .expirednoterow:last-of-type {
+      border-bottom: 0; }
     .noterow.title, .expirednoterow.title {
       display: none; }
     .noterow div, .expirednoterow div {

@@ -3,6 +3,7 @@
 <f:section name="Content">
     <f:security.ifAuthenticated>
         <f:then>
+            <f:link.action id="yournotes" action="listNotes" controller="createPass" class="btn btn-primary">Notes</f:link.action>
         </f:then>
         <f:else>
             <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
