@@ -86,6 +86,12 @@ i.emptyNotes {
   position: relative;
   top: 20px; }
 
+#sendEmail {
+  margin-top: 14px; }
+
+.footer {
+  font-size: 9pt; }
+
 @media (max-width: 1000px) {
   .noterow, .expirednoterow {
     border-bottom: 1px solid #afafaf;
