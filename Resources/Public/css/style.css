@@ -19,8 +19,29 @@ footer p {
 
 .noterow div {
     position: relative;
-    width: 135px;
+    width: 160px;
     display: inline-table;
+}
+
+.noterow div:last-of-type {
+    padding-left: 30px;
+    width: 60px;
+}
+
+.noterow div input {
+    height: 22px;
+    font-size: 14px;
+}
+
+.expirednoterow div {
+    margin-top: 20px;
+    width: 201px;
+    display: inline-table;
+}
+
+.expirednoterow div:last-of-type {
+    padding-left: 29px;
+    width: 40px;
 }
 
 #callable, input{
@@ -36,5 +57,25 @@ footer p {
 }
 
 .noterow:last-of-type {
-    padding-bottom: 0px;
+    padding-bottom: 0;
+}
+
+#logout, #login, #createnewnote, #notregistered, #yournotes {
+    margin-left: 10px;
+}
+
+#loginbtn, #registerbtn, #resetpw {
+    margin-top: 15px;
+}
+
+#login {
+    margin-right: 10px;
+}
+
+.hide {
+    display: none;
+}
+
+.expired {
+    color: #009fe3;
 }

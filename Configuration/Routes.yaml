@@ -13,3 +13,27 @@
     '@package': 'Passbin.Base'
     '@controller': 'ViewPass'
     '@action': 'index'
+
+-
+  name: 'ResetPw'
+  uriPattern: 'reset/{id}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'User'
+    '@action': 'newPassword'
+
+-
+  name: 'ActivateAccount'
+  uriPattern: 'activate/{username}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'User'
+    '@action': 'activateAccount'
+
+-
+  name: 'deleteNote'
+  uriPattern: 'deletenote/{id}'
+  defaults:
+    '@package': 'Passbin.Base'
+    '@controller': 'ViewPass'
+    '@action': 'deleteNote'

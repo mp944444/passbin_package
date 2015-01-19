@@ -15,6 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Pass {
 
     /**
+     * @var \Passbin\Base\Domain\Repository\PassRepository
+     * @Flow\Inject
+     */
+    protected $passRepository;
+
+    /**
      * id
      * @var string
      */
@@ -96,6 +102,7 @@ class Pass {
         return $this->creator;
     }
 
+
     /**
      * @param string $creator
      */
@@ -103,6 +110,7 @@ class Pass {
     {
         $this->creator = $creator;
     }
+
 
     /**
      * @return mixed
@@ -264,4 +272,30 @@ class Pass {
 	{
 		$this->user = $user;
 	}
+
+    /**
+     * @return bool
+     */
+    public function isValid() {
+        $valid = true;
+
+        if($this->callable <= 0)
+            $valid = false;
+
+        if($this->getExpiration() == NULL)
+            $valid = false;
+
+        $now = new \DateTime('now');
+        if($this->getExpiration() <= $now)
+            $valid = false;
+
+        // If is not valid reset password and secure
+        if(!$valid) {
+            $this->setPassword(NULL);
+            $this->setSecure(NULL);
+            $this->passRepository->update($this);
+        }
+
+        return $valid;
+    }
 }

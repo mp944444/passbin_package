@@ -1,13 +1,19 @@
 <f:layout name="Default" />
-
-<f:section name="Title">Link to share</f:section>
-
+<f:section name="Title">Note wurde erstellt</f:section>
 <f:section name="Content">
-
+    <f:security.ifAuthenticated>
+        <f:then>
+            <f:link.action id="yournotes" action="listNotes" controller="createPass" class="btn btn-primary">Notes</f:link.action>
+        </f:then>
+        <f:else>
+            <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
+        </f:else>
+    </f:security.ifAuthenticated>
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+<h2>Note wurde <span class="highlight">erstellt</span></h2>
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
+    <div class="col-lg-10 col-lg-offset-1">
         <div class="well bs-component">
-            <form>
                 <fieldset>
                     <div class="form-group">
                         <label for="link" class="col-lg-2 control-label">Link</label>
@@ -16,9 +22,8 @@
                         </div>
                     </div>
                 </fieldset>
-            </form>
         </div>
-        <f:link.action action="new" controller="createPass" class="btn btn-primary">back</f:link.action>
+        <f:link.action action="new" controller="createPass" class="btn btn-primary">Zurück</f:link.action>
     </div>
 </div>
 </f:section>

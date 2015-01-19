@@ -1,0 +1,42 @@
+<f:layout name="Default" />
+<f:section name="Title">Passwort ändern</f:section>
+<f:section name="Content">
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+    <h2>Passwort <span class="highlight">ändern</span></h2>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <div class="well bs-component">
+                <f:form action="sendResetMail" controller="User" enctype="multipart/form-data" class="form-horizontal findErrors" method="Post">
+                    <f:form.validationResults>
+                        <f:if condition="{validationResults.flattenedErrors}">
+                            <div class="alert alert-danger">
+                                <ul class="error">
+                                    <f:for each="{validationResults.flattenedErrors}" as="elementErrors"
+                                           key="elementIdentifier" reverse="true">
+                                        <f:for each="{elementErrors}" as="error">
+                                            <li>{error}</li>
+                                        </f:for>
+                                    </f:for>
+                                </ul>
+                            </div>
+                        </f:if>
+                    </f:form.validationResults>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Username</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield name="username" property="username" value="" class="form-control" placeholder="Username" errorClass="hasError" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <div id="captcha" class="g-recaptcha" data-sitekey="6Le0Sf8SAAAAAMXFrjit-ATcHLtJaLA1sku-5BdG"></div>
+                                <f:form.submit class="btn btn-primary hide" id="resetpw" value="Send Email" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </f:form>
+            </div>
+        </div>
+    </div>
+</f:section>

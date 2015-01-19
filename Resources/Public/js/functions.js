@@ -3,10 +3,12 @@ $(document).ready(function() {
         $("#usernamereader").val($(this).val());
     });
 
-    $('#login').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#createnewnote').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#yournotes').appendTo('ul.nav.navbar-nav.navbar-right');
-    $('#logout').appendTo('ul.nav.navbar-nav.navbar-right');
+    $('#register, #login, #createnewnote, #yournotes, #logout').appendTo('ul.nav.navbar-nav.navbar-right');
+
+    if($('#email').val() != "") {
+        $('#email').parent().parent().slideDown();
+        $('#sendEmail').prop('checked', true);
+    }
 
     $('#sendEmail').change(function() {
         if($(this).is(":checked")) {
@@ -18,4 +20,21 @@ $(document).ready(function() {
     });
 
     $('.findErrors').find('.hasError').parent().parent().addClass('has-error');
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 });
+
+var verifyCallback = function() {
+    $("#loginbtn, #registerbtn, #resetpw").removeClass('hide');
+};
+var onloadCallback = function() {
+    grecaptcha.render("captcha", {
+        'sitekey':  '6Lewmv8SAAAAAK_rDgRZgZOZyaOaxHHXh0Jp3mAy',
+        'callback': verifyCallback
+    });
+};

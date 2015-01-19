@@ -1,33 +1,39 @@
 <f:layout name="Default" />
-
-<f:section name="Title">Unlock Password (id:{passId})</f:section>
-
+<f:section name="Title">Passwort entschlüssen</f:section>
 <f:section name="Content">
-
-
-
-<f:if condition="{found}">
+    <f:security.ifAuthenticated>
+        <f:then>
+        </f:then>
+        <f:else>
+            <f:link.action id="login" action="start" controller="User" class="btn btn-primary">Login</f:link.action>
+        </f:else>
+    </f:security.ifAuthenticated>
+    <f:link.action id="createnewnote" action="new" controller="createPass" class="btn btn-primary">Neue Note</f:link.action>
+    <f:if condition="{found}">
     <f:then>
+        <h2>Passwort <span class="highlight">entschlüssen</span></h2>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
+            <div class="col-lg-10 col-lg-offset-1">
                 <div class="well bs-component">
                     <f:form action="decrypt" enctype="multipart/form-data" class="form-horizontal findErrors" arguments="{passId:passId, password:password}">
                         <fieldset>
                             <div class="form-group">
-                                <label for="password" class="col-lg-2 control-label">Password</label>
+                                <label for="password" class="col-lg-2 control-label">Passwort</label>
                                 <div class="col-lg-10">
-                                    <f:form.password name="password" id="password" class="form-control" placeholder="Password" errorClass="hasError" />
+                                    <f:form.password name="password" id="password" class="form-control" placeholder="Passwort" errorClass="hasError" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-10 col-lg-offset-2">
-                                    <f:form.submit class="btn btn-primary" value="Submit" />
+                                    <f:form.submit class="btn btn-primary" value="Entschlüsseln" />
                                 </div>
                             </div>
                         </fieldset>
                     </f:form>
                 </div>
-                <f:link.action action="new" controller="createPass" class="btn btn-primary">back</f:link.action>
+                <f:security.ifAuthenticated>
+                    <f:link.action action="new" controller="createPass" class="btn btn-primary">Zurück</f:link.action>
+                </f:security.ifAuthenticated>
             </div>
         </div>
     </f:then>

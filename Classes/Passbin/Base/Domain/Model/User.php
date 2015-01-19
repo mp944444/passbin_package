@@ -41,6 +41,21 @@ class User {
 	protected $lastLogin;
 
 	/**
+	 * @var string
+	 */
+	protected $email;
+
+	/**
+	 * @var string
+	 */
+	protected $resetid;
+
+	/**
+	 * @var boolean
+	 */
+	protected $activated;
+
+	/**
 	 * @return \TYPO3\Flow\Security\Account
 	 */
 	public function getAccount()
@@ -89,6 +104,29 @@ class User {
 	}
 
 	/**
+	 * @return \Doctrine\Common\Collections\Collection|static
+	 */
+	public function getExpiredEntries() {
+		return $this->passEntrys->filter(
+			function(Pass $pass) {
+				if($pass->isValid()==false)
+				return true;
+			}
+		);
+	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\Collection|static
+	 */
+	public function getActiveEntries() {
+		return $this->passEntrys->filter(
+			function(Pass $pass) {
+				return $pass->isValid();
+			}
+		);
+	}
+
+	/**
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public function getPassEntrys()
@@ -115,6 +153,38 @@ class User {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getEmail()
+	{
+		return $this->email;
+	}
+
+	/**
+	 * @param string $email
+	 */
+	public function setEmail($email)
+	{
+		$this->email = $email;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResetid()
+	{
+		return $this->resetid;
+	}
+
+	/**
+	 * @param string $resetid
+	 */
+	public function setResetid($resetid)
+	{
+		$this->resetid = $resetid;
+	}
+
+	/**
 	 * @return \DateTime
 	 */
 	public function getLastLogin()
@@ -128,5 +198,21 @@ class User {
 	public function setLastLogin($lastLogin)
 	{
 		$this->lastLogin = $lastLogin;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isActivated()
+	{
+		return $this->activated;
+	}
+
+	/**
+	 * @param boolean $activated
+	 */
+	public function setActivated($activated)
+	{
+		$this->activated = $activated;
 	}
 }

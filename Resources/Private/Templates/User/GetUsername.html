@@ -1,0 +1,40 @@
+<f:layout name="Default" />
+<f:section name="Title">Neues Passwort</f:section>
+<f:section name="Content">
+    <h2>Neues <span class="highlight">Passwort</span></h2>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <div class="well bs-component">
+                <f:form action="sentUsername" controller="User" class="form-horizontal findErrors" method="post">
+                    <f:form.validationResults>
+                        <f:if condition="{validationResults.flattenedErrors}">
+                            <div class="alert alert-danger">
+                                <ul class="error">
+                                    <f:for each="{validationResults.flattenedErrors}" as="elementErrors"
+                                           key="elementIdentifier" reverse="true">
+                                        <f:for each="{elementErrors}" as="error">
+                                            <li>{error}</li>
+                                        </f:for>
+                                    </f:for>
+                                </ul>
+                            </div>
+                        </f:if>
+                    </f:form.validationResults>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <f:form.textfield name="email" property="uemail" value="" class="form-control" placeholder="Email" errorClass="hasError" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <f:form.submit class="btn btn-primary" id="sendUsername" value="Email senden" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </f:form>
+            </div>
+        </div>
+    </div>
+</f:section>
