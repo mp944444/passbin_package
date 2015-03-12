@@ -28,7 +28,7 @@ class Pass {
 
 	/**
 	 * @var \Passbin\Base\Domain\Model\User
-	 * @ORM\ManyToOne(inversedBy="user")
+	 * @ORM\ManyToOne(inversedBy="passEntrys")
 	 */
 	protected $user;
 
