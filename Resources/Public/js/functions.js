@@ -33,8 +33,10 @@ var verifyCallback = function() {
     $("#loginbtn, #registerbtn, #resetpw").removeClass('hide');
 };
 var onloadCallback = function() {
+    var captchaKey = $('div#captcha').data('ref');
+
     grecaptcha.render("captcha", {
-        'sitekey':  '6Lewmv8SAAAAAK_rDgRZgZOZyaOaxHHXh0Jp3mAy',
+        'sitekey':  captchaKey,
         'callback': verifyCallback
     });
 };
