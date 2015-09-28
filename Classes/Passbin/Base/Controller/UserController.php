@@ -71,14 +71,16 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function registerAction($username = "", $firstname = "", $lastname = "", $email = "") {
-		if($this->authenticationManager->isAuthenticated()) {
+        $captchaKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.captchaKey");
+        if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("new", "createPass");
 		}
 		$this->view->assignMultiple(array(
 			"username" => $username,
 			"firstname" => $firstname,
 			"lastname" => $lastname,
-			"email" => $email
+			"email" => $email,
+            "captchaKey" => $captchaKey
 		));
 	}
 
@@ -170,7 +172,10 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function resetPwAction() {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("start", "User");
-		}
+		} else {
+            $captchaKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.captchaKey");
+            $this->view->assign("captchaKey", $captchaKey);
+        }
 	}
 
 	/**
