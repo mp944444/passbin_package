@@ -49,6 +49,13 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	protected $accountService;
 
+
+    /**
+     * @var \Passbin\Base\Domain\Service\CaptchaService
+     * @FLow\Inject
+     */
+    protected $captchaService;
+
     /**
 	 * @param string $headline
 	 * @param int $callable
@@ -58,7 +65,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      */
     public function newAction($headline = "", $callable = 0, $expiration = "", $email = "") {
         $publicKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.publicKey");
-        $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
         $callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assignMultiple(array(
 			"headline" => $headline,
@@ -67,7 +73,6 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			"email" => $email,
 			"callableOptions" => $callableOptions,
             "publicKey" => $publicKey,
-            "privateKey" => $privateKey
 		));
 	}
 
@@ -108,51 +113,59 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	* @param string $callable
 	*/
 	public function createAction(\Passbin\Base\Domain\Model\Pass $newPass, $expiration, $callable = NULL) {
-		$callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
-		if($expiration == "") {
-			$expiration = new \DateTime('+1 hour');
-		} else {
-			$expiration = new \DateTime($expiration);
-			if($expiration <= new \DateTime('now')) {
-				$this->addFlashMessage("Verfügbarkeits Datum ist überschritten!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
-				$this->redirect("new", "CreatePass", NULL, array(
-					"headline" => $newPass->getHeadline(),
-					"callable" => $newPass->getCallable(),
-					"sendEmail" => $newPass->getSendEmail(),
-					"email" => $newPass->getEmail()
-				));
-			}
-		}
+        $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
 
-		$newPass->setUser($this->accountService->getActiveAuthenticatedUser());
-		$newPass->setExpiration($expiration);
+        if($this->captchaService->verifyCaptcha($_POST['g-recaptcha-response'], $privateKey)) {
+            $callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
-		if($callable == NULL) {
-			$newPass->setCallable($callableOptions[0]);
-		} else {
-			$newPass->setCallable($callableOptions[$callable]);
-		}
+            if($expiration == "") {
+                $expiration = new \DateTime('+1 hour');
+            } else {
+                $expiration = new \DateTime($expiration);
+                if($expiration <= new \DateTime('now')) {
+                    $this->addFlashMessage("Verfügbarkeits Datum ist überschritten!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+                    $this->redirect("new", "CreatePass", NULL, array(
+                        "headline" => $newPass->getHeadline(),
+                        "callable" => $newPass->getCallable(),
+                        "sendEmail" => $newPass->getSendEmail(),
+                        "email" => $newPass->getEmail()
+                    ));
+                }
+            }
 
-		$newPass->setId(uniqid());
-		$newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
-		$newPass->setPassword(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getPassword()));
-		$newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
-		$newPass->setCreationDate(new \DateTime("now"));
-		$this->passRepository->add($newPass);
+            $newPass->setUser($this->accountService->getActiveAuthenticatedUser());
+            $newPass->setExpiration($expiration);
 
-		if ($newPass->getSendEmail() === "yes") {
-			$name = "Someone";
-			if($newPass->getUser() != NULL) {
-				$name = $newPass->getUser()->getFirstname().' '.$newPass->getUser()->getLastname();
-			}
-			$mail = new \TYPO3\SwiftMailer\Message();
-			$mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
-				->setTo(array($newPass->getEmail() => ''))
-				->setSubject($name.' hat eine geheime Note mit Ihnen geteilt!')
-				->setBody('Neue Note für Sie: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' /// Die Note kann '.$newPass->getCallable().' mal bis zum '.$newPass->getExpiration()->format("Y-m-d H:i")." entschlüsselt werden. /// Bitte folgendes Passwort nutzen: ".\Passbin\Base\Domain\Service\CryptionService::decryptData($newPass->getPassword()))
-				->send();
-		}
-		$this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
+            if($callable == NULL) {
+                $newPass->setCallable($callableOptions[0]);
+            } else {
+                $newPass->setCallable($callableOptions[$callable]);
+            }
+
+            $newPass->setId(uniqid());
+            $newPass->setSecure(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getSecure()));
+            $newPass->setPassword(\Passbin\Base\Domain\Service\CryptionService::encryptData($newPass->getPassword()));
+            $newPass->setCreator($this->request->getHttpRequest()->getClientIpAddress());
+            $newPass->setCreationDate(new \DateTime("now"));
+            $this->passRepository->add($newPass);
+
+            if ($newPass->getSendEmail() === "yes") {
+                $name = "Someone";
+                if($newPass->getUser() != NULL) {
+                    $name = $newPass->getUser()->getFirstname().' '.$newPass->getUser()->getLastname();
+                }
+                $mail = new \TYPO3\SwiftMailer\Message();
+                $mail->setFrom(array('noreply@passb.in ' => 'Passbin'))
+                    ->setTo(array($newPass->getEmail() => ''))
+                    ->setSubject($name.' hat eine geheime Note mit Ihnen geteilt!')
+                    ->setBody('Neue Note für Sie: '.$this->request->getHttpRequest()->getBaseUri()."id/".$newPass->getId().' /// Die Note kann '.$newPass->getCallable().' mal bis zum '.$newPass->getExpiration()->format("Y-m-d H:i")." entschlüsselt werden. /// Bitte folgendes Passwort nutzen: ".\Passbin\Base\Domain\Service\CryptionService::decryptData($newPass->getPassword()))
+                    ->send();
+            }
+            $this->redirect("generateLink", "CreatePass", "Passbin.Base", array("passId" => $newPass->getId()));
+        } else {
+            $this->addFlashMessage("Captcha konnte nicht verifiziert werden.", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
+            $this->redirect("new", "CreatePass", "Passbin.Base");
+        }
 	}
 }
