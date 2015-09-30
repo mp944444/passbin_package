@@ -9,6 +9,7 @@ namespace Passbin\Base\Controller;
 use Passbin\Base\Domain\Model\User;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Error\Message;
+use TYPO3\Flow\Configuration\ConfigurationManager;
 
 class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
@@ -59,6 +60,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      * @FLow\Inject
      */
     protected $captchaService;
+
+    /**
+     * @var ConfigurationManager
+     * @Flow\Inject
+     */
+    protected $configurationManager;
 
 	/**
 	 * @return void
