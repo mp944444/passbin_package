@@ -109,7 +109,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function createAccountAction($firstname, $lastname, $username, $password, $email, $confirmPassword) {
         $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
 
-        if($this->captchaService->verifyCaptcha($_POST['g-recaptcha-response'], $privateKey)) {
+        if($this->captchaService->verifyCaptcha($this->request->getArgument('g-recaptcha-response'), $privateKey)) {
             if(strlen($password) < 8 || $password != $confirmPassword) {
                 $this->addFlashMessage("Passwörter stimmen nicht überein oder ist zu kurz (mindestens 8 Zeichen)!", "", \TYPO3\Flow\Error\Message::SEVERITY_ERROR);
                 $this->redirect("register", "User", NULL, array(
@@ -208,7 +208,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	public function sendResetMailAction($username = "") {
         $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
 
-        if($this->captchaService->verifyCaptcha($_POST['g-recaptcha-response'], $privateKey)) {
+        if($this->captchaService->verifyCaptcha($this->request->getArgument('g-recaptcha-response'), $privateKey)) {
             /** @var  \TYPO3\Flow\Security\Account $account
              * @var User $user */
             if($this->authenticationManager->isAuthenticated()) {

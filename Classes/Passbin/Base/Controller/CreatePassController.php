@@ -116,7 +116,7 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
         $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
 
-        if($this->captchaService->verifyCaptcha($_POST['g-recaptcha-response'], $privateKey)) {
+        if($this->captchaService->verifyCaptcha($this->request->getArgument('g-recaptcha-response'), $privateKey)) {
             $callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 
             if($expiration == "") {
