@@ -71,7 +71,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function registerAction($username = "", $firstname = "", $lastname = "", $email = "") {
-        $captchaKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.captchaKey");
+        $publicKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.publicKey");
+        $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
         if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("new", "createPass");
 		}
@@ -80,7 +81,8 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			"firstname" => $firstname,
 			"lastname" => $lastname,
 			"email" => $email,
-            "captchaKey" => $captchaKey
+            "publicKey" => $publicKey,
+            "privateKey" => $privateKey
 		));
 	}
 
@@ -173,8 +175,12 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if($this->authenticationManager->isAuthenticated()) {
 			$this->redirect("start", "User");
 		} else {
-            $captchaKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.captchaKey");
-            $this->view->assign("captchaKey", $captchaKey);
+            $publicKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.publicKey");
+            $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
+            $this->view->assignMultiple(array(
+               "publicKey" => $publicKey,
+                "privateKey" => $privateKey
+            ));
         }
 	}
 

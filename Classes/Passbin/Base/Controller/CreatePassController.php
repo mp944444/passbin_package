@@ -57,7 +57,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
      * @return void
      */
     public function newAction($headline = "", $callable = 0, $expiration = "", $email = "") {
-        $captchaKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.captchaKey");
+        $publicKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.publicKey");
+        $privateKey = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.privateKey");
         $callableOptions = $this->configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, "Passbin.Pass.callableOptions");
 		$this->view->assignMultiple(array(
 			"headline" => $headline,
@@ -65,7 +66,8 @@ class CreatePassController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			"callable" => $callable,
 			"email" => $email,
 			"callableOptions" => $callableOptions,
-            "captchaKey" => $captchaKey
+            "publicKey" => $publicKey,
+            "privateKey" => $privateKey
 		));
 	}
 
