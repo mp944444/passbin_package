@@ -175,7 +175,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
                 $mail->setFrom(array('noreply@passb.in' => 'Passbin'))
                     ->setTo(array($user->getEmail() => ''))
                     ->setSubject("Willkommen bei Passbin")
-                    ->setBody('Willkommen bei Passbin. Bitte auf den folgenden Link klicken um den Account zu aktivieren. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$username)
+                    ->setBody('Willkommen bei Passbin. Bitte auf den folgenden Link klicken um den Account zu aktivieren. '.$this->request->getHttpRequest()->getBaseUri().'activate/'.$this->persistenceManager->getIdentifierByObject($user))
                     ->send();
 
                 $this->addFlashMessage("Account wurde erstellt! Bitte auf den Link in der Email klicken", "", \TYPO3\Flow\Error\Message::SEVERITY_OK);
@@ -311,7 +311,7 @@ class UserController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		}
 
 		/** @var User $user */
-		$user = $this->accountService->getActiveUser($username);
+        $user = $this->persistenceManager->getObjectByIdentifier($username, "Passbin\\Base\\Domain\\Model\\User", FALSE);
 
 		if($user->isActivated()) {
 			$this->addFlashMessage("User ist bereits aktiviert!", "", \TYPO3\Flow\Error\Message::SEVERITY_NOTICE);
